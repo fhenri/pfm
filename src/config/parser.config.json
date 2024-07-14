@@ -1,0 +1,19 @@
+{
+  "cmut-ofx": {
+    "bank": "Crédit Mutuel",
+    "url": "https://www.creditmutuel.fr/",
+    "alias": "cmut",
+    "file": "ofx",
+    "parser": "parsers.cmutofxparser",
+    "class": "cmutofxTransactionImportStrategy"
+  },
+  "mcb-csv": {
+    "display": "Mauritius Commercial Bank",
+    "bank": "MCB",
+    "url": "https://www.mcb.mu/en/personal/ebanking",
+    "alias": "mcb",
+    "file": "csv",
+    "parser": "parsers.mcbcsvparser",
+    "class": "mcbcsvTransactionImportStrategy"
+  }
+}
