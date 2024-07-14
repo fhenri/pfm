@@ -11,7 +11,8 @@ export async function getMyUser() {
       const auth0User = session.user;
       const dbUser = await User.findOne({ name: auth0User.name});
 
-      return { ...auth0User, profile: dbUser.profileList };
+      if (!dbUser) return { ...auth0User, profile: [] };
+      else return { ...auth0User, profile: dbUser.profileList };
 }
 
 export async function setUserProfile(user, profile: string) {
@@ -36,7 +37,7 @@ export async function getUserAvailableProfile(user) {
 export async function getCurrentAccountList(user) {
     const currentProfileName = await getCurrentUserProfile(user);
     if (!currentProfileName) return null;
-    const currentProfile = user.profile.find(p => p.name === currentProfileName);
+    const currentProfile = user.profile?.find(p => p.name === currentProfileName);
     if (!currentProfile) return null;
     return currentProfile.accountList;
 }
