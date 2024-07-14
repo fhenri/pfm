@@ -5,9 +5,8 @@ import { useFormStatus, useFormState } from 'react-dom'
 import { setFormComment } from "@/actions/dtAction";
 import { Input } from "@/components/ui/input"
 
-const DataTableComment = (props) => {
-
-    const {txId, txComment} = props;
+const DataTableComment = ({ txId, txComment }:
+   {txId: string, txComment: string}) => {
 
     const [state, formCommentAction] = useFormState(setFormComment, null)
     const [comment, setComment] = useState(() => txComment ? txComment : '' );
@@ -16,11 +15,11 @@ const DataTableComment = (props) => {
       setComment(() => txComment ? txComment : '');
     }, [txComment]);
 
-    const commentKeyDown = (event) => {
+    const commentKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Tab") {
             let formData = new FormData();
             formData.append('id', txId);
-            formData.append('comment', event.target.value);
+            formData.append('comment', (event.target as HTMLInputElement).value);
             formCommentAction(formData);
         }
     }

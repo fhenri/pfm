@@ -1,8 +1,7 @@
-import { NextPage } from 'next';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import bTransaction from '@/types/bTransaction';
-import bAccount from '@/types/bAccount';
-import Category from '@/types/txCategory';
+import bTransaction, { ITransaction } from '@/types/bTransaction';
+import bAccount, { IAccount } from '@/types/bAccount';
+import Category, { ICategory } from '@/types/txCategory';
 import TransactionTableClient from '@/components/datatable/transaction-table-client';
 import AccountSelectionClient from '@/components/account-selection-client';
 import * as userService from '@/services/userService';
@@ -12,16 +11,16 @@ const BankingPage = async ({ params, searchParams }: {
                              searchParams: { [key: string]: string | string[] | undefined }
                            }) => {
 
-    const accountId = searchParams['accountId'];
+    const accountId = searchParams['accountId'] as string;
     console.log('filter on accountId ', accountId);
 
     const user = await userService.getMyUser();
-    const currentAccountList = await userService.getCurrentAccountList(user);
+    const currentAccountList = await userService.getCurrentAccountList(user) as [string];
 
     const txList:ITransaction[]    = await getTransactionData(accountId, currentAccountList);
     const categoryList:ICategory[] = await getCategoryData();
     const accountList:IAccount[]   = await getAccountFromList(currentAccountList);
-    const selectAccount:IAccount   = await getAccountFromNumber(accountId, currentAccountList);
+    const selectAccount:IAccount   = await getAccountFromNumber(accountId, currentAccountList) as IAccount;
 
     /*
 import DataTableClient from '@/components/datatable/DataTableClient';
@@ -54,7 +53,7 @@ import DataTableClient from '@/components/datatable/DataTableClient';
             return new Date(value);
         }
         return value;
-    }) as ITransaction[] | null;
+    }) as ITransaction[] | [];
 
     const isAccountSelected = accountId ? true : false;
     const categoryListJson = JSON.parse(JSON.stringify(categoryList));
@@ -92,7 +91,7 @@ const getAccountFromList = async(currentList:[string]):Promise<IAccount[]> => {
 }
 
 const getAccountFromNumber = async(accountNumber:string, currentAccountList:[string]):
-Promise<IAccount[]> => {
+Promise<IAccount | null> => {
     try {
         if (accountNumber && currentAccountList.includes(accountNumber)) {
           return await bAccount.findOne({ accountNumber: accountNumber });
@@ -118,7 +117,9 @@ const getCategoryData = async():Promise<ICategory[]> => {
     }
 }
 
-const getTransactionData = async(accountSelectedId, currentAccountList):Promise<ITransaction[]> => {
+const getTransactionData = async(
+    accountSelectedId: string,
+    currentAccountList: string[]) : Promise<ITransaction[]> => {
     try {
         let queryFilter = {};
         if (accountSelectedId && currentAccountList.includes(accountSelectedId)) {
@@ -141,4 +142,5 @@ const getTransactionData = async(accountSelectedId, currentAccountList):Promise<
 }
 
 //export default withPageAuthRequired(BankingPage, { returnTo: "/banking" });
-export default withPageAuthRequired(BankingPage);
+//export default withPageAuthRequired(BankingPage);
+export default BankingPage;

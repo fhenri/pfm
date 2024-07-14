@@ -29,7 +29,7 @@ export default function RootLayout({
         <div className="mx-2 md:mx-5 mt-20 mb-10">
             {children}
         </div>
-        <Toaster swipeDirection="up"/>
+        <Toaster />
         <Footer />
       </body>
     </html>

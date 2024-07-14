@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
 })
 
 
-const User: Model<ITransaction> =
+const User: Model<userSchema> =
   mongoose.models?.User || mongoose.model("User", userSchema);
 
 export default User;

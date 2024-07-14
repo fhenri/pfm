@@ -31,11 +31,21 @@ import { DataTableColumns } from "./data-table-column-def"
 import { DataTableToolbar } from "./data-table-toolbar"
 import ITransaction from '@/types/bTransaction';
 
-export const CategoryContext = createContext();
+interface CategoryContextType {
+  categoryList: string[];
+  setCategoryList: (categories: string[]) => void;
+}
+
+const defaultContextValue: CategoryContextType = {
+  categoryList: [],
+  setCategoryList: () => {}
+};
+
+export const CategoryContext = createContext<CategoryContextType>(defaultContextValue);
 
 const TransactionTableClient = (
     { transactions, categories, isAccountSelected }:
-    { transactions: ITransaction[], categories: ICategory[], isAccountSelected: boolean }) => {
+    { transactions: ITransaction[] | null, categories: ICategory[], isAccountSelected: boolean }) => {
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])

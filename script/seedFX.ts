@@ -5,15 +5,21 @@ import Papa from 'papaparse';
 import fs from 'fs';
 import { saveDBRate } from '@/services/exchangeRateService';
 
+type CsvRowType = {
+    Date: Date;
+    Price: number;
+};
+
+
 async function importHistoricalRates(
-    fromCurrency,
-    toCurrency,
-    filename) {
+    fromCurrency: string,
+    toCurrency: string,
+    filename: string) {
     console.log('import historical rates from file:', filename);
 
     //const readableStream = fs.createReadStream(filename, { encoding: 'utf-8' });
     const fileContent = fs.readFileSync(filename, { encoding: 'utf-8' });
-    await Papa.parse(fileContent, {
+    const parsedResults = Papa.parse(fileContent, {
       skipEmptyLines: true,
       header: true,
       dynamicTyping: true,
@@ -21,17 +27,22 @@ async function importHistoricalRates(
       step: async (row) => {
           await saveDBRate(fromCurrency, toCurrency, row.data.Date, row.data.Price);
       },
-      */
       complete: (results) => {
         results.data.forEach(async (row) => {
-            console.log(row.Date, row.Price);
             await saveDBRate(fromCurrency, toCurrency, row.Date, 1 / row.Price);
         });
       },
       error: (error) => {
         console.error('Error parsing CSV:', error);
       }
+      */
     });
+
+    if (parsedResults.data && parsedResults.data.length > 0) {
+        for (const row of parsedResults.data as CsvRowType[]) {
+            await saveDBRate(fromCurrency, toCurrency, row.Date, 1 / row.Price);
+        }
+    }
 
     return;
 }

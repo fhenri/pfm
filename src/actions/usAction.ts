@@ -6,11 +6,12 @@ import { revalidatePath } from "next/cache";
 
 export async function setUserProfileForm(
   prevState: { message: string },
-  formData: FormData,
+  formData: string,
 ): Promise<{ message: string }> {
     const currentUser = await getSessionUser();
     userService.setUserProfile(currentUser, formData)
     revalidatePath('/');
+    return { message: "user set" };
 }
 
 export async function addProfile(
@@ -18,8 +19,9 @@ export async function addProfile(
   formData: FormData,
 ): Promise<{ message: string }> {
     const currentUser = await getSessionUser();
-    userService.addSvcProfile(currentUser, formData.get('profileName'))
+    userService.addSvcProfile(currentUser, formData.get('profileName') as string)
     revalidatePath('/');
+    return { message: "user set" };
 }
 
 export async function deleteProfile(
@@ -27,8 +29,9 @@ export async function deleteProfile(
   formData: FormData,
 ): Promise<{ message: string }> {
     const currentUser = await getSessionUser();
-    userService.delSvcProfile(currentUser, formData.get('profileName'))
+    userService.delSvcProfile(currentUser, formData.get('profileName') as string)
     revalidatePath('/');
+    return { message: "user set" };
 }
 
 export async function addAccountToProfile(
@@ -36,8 +39,12 @@ export async function addAccountToProfile(
   formData: FormData,
 ): Promise<{ message: string }> {
     const currentUser = await getSessionUser();
-    userService.addSvcAccountToProfile(currentUser, formData.get('profileName'), formData.get('accountId'));
+    userService.addSvcAccountToProfile(
+        currentUser,
+        formData.get('profileName') as string,
+        formData.get('accountId') as string);
     revalidatePath('/');
+    return { message: "user set" };
 }
 
 export async function removeAccountToProfile(
@@ -45,7 +52,11 @@ export async function removeAccountToProfile(
   formData: FormData,
 ): Promise<{ message: string }> {
     const currentUser = await getSessionUser();
-    userService.remSvcAccountToProfile(currentUser, formData.get('profileName'), formData.get('accountId'));
+    userService.remSvcAccountToProfile(
+        currentUser,
+        formData.get('profileName') as string,
+        formData.get('accountId') as string);
     revalidatePath('/');
+    return { message: "user set" };
 }
 

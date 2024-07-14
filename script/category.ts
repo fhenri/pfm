@@ -6,7 +6,12 @@ import fs from 'fs';
 import CategoryRule from '@/types/txRules';
 import Category from '@/types/txCategory';
 
-async function updateCategoryAndRules(filename) {
+type CsvRowType = {
+    description: string;
+    category: string;
+};
+
+async function updateCategoryAndRules(filename: string) {
     console.log('update category and category rules:', filename);
 
     //const readableStream = fs.createReadStream(filename, { encoding: 'utf-8' });
@@ -14,9 +19,9 @@ async function updateCategoryAndRules(filename) {
     Papa.parse(fileContent, {
         complete: async function(results) {
             for (const result in results.data) {
-                const csvRow = results.data[result];
-                const ruleKey:string = csvRow.description;
-                const ruleCategory:string = csvRow.category;
+                const csvRow = results.data[result] as CsvRowType;
+                const ruleKey: string = csvRow.description;
+                const ruleCategory: string = csvRow.category;
 
                 let rule = await CategoryRule.findById(ruleKey);
                 if (rule == null) {

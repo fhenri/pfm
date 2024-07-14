@@ -5,13 +5,14 @@ import { useFormStatus, useFormState } from 'react-dom'
 import { setFormCategory } from "@/actions/dtAction";
 import { CategoryContext } from './transaction-table-client';
 
-const DataTableCategory = (props) => {
+const DataTableCategory = ({ txId, txCategories }:
+    {txId: string, txCategories: string[]}) => {
 
-    const { txId, txCategories } = props;
     const { categoryList, setCategoryList } = useContext(CategoryContext);
     const [state, formCategoryAction] = useFormState(setFormCategory, { message: "" })
 
-    const updateCategory = (newCategory) => {
+
+    const updateCategory = (target: HTMLInputElement, newCategory: string) => {
         if (Boolean(newCategory)) {
             let formData = new FormData();
             formData.append('id', txId);
@@ -21,27 +22,27 @@ const DataTableCategory = (props) => {
             if (!categoryList.includes(newCategory)) {
                 setCategoryList([...categoryList, newCategory].sort());
             }
-            event.target.value = '';
+            target.value = '';
         }
     }
 
-    const categoryFocusOut = (event) => {
+    const categoryFocusOut = (event: React.FocusEvent<HTMLInputElement>) => {
         const newCategory = event.target.value.trim();
-        updateCategory(newCategory);
+        updateCategory(event.target, newCategory);
     }
 
-    const categoryKeyDown = (event) => {
-        const newCategory = event.target.value.trim();
+    const categoryKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Tab" || event.key === "Enter") {
-            updateCategory(newCategory);
+            const newCategory = (event.target as HTMLInputElement).value.trim();
+            updateCategory(event.target as HTMLInputElement, newCategory);
         }
     }
 
-    const removeCategory = (event) => {
+    const removeCategory = (event: React.MouseEvent<HTMLSpanElement>) => {
         let formData = new FormData();
         formData.append('id', txId);
         formData.append('action', 'splice');
-        formData.append('category', event.target.outerText);
+        formData.append('category', (event.target as HTMLInputElement).outerText);
         formCategoryAction(formData);
     }
 

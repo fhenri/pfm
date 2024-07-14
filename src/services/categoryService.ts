@@ -1,4 +1,4 @@
-import CategoryRule from '@/types/txRules';
+import CategoryRule, { ICategoryRules } from '@/types/txRules';
 
 export async function getCategoryForTransaction(description: string) {
     const categoryRules = await getCategoryRules();

@@ -1,5 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from 'fs';
 
 import { connectToMongoDB } from '@/lib/mongo';
@@ -10,7 +9,12 @@ import Category from '@/types/txCategory';
 
 export const dynamic = 'force-dynamic' // defaults to auto
 
-export async function GET (req: NextApiRequest, res: NextApiResponse) {
+type CsvRowType = {
+    description: string;
+    category: string;
+};
+
+export async function GET (req: NextRequest, res: NextResponse) {
     try {
         connectToMongoDB();
 
@@ -19,7 +23,7 @@ export async function GET (req: NextApiRequest, res: NextApiResponse) {
             complete: async function(results) {
                 // dont use forEach here
                 for (const result in results.data) {
-                    const csvRow = results.data[result];
+                    const csvRow = results.data[result] as CsvRowType;
                     const ruleKey:string = csvRow.description;
                     const ruleCategory:string = csvRow.category;
 

@@ -2,6 +2,8 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import { Column } from "@tanstack/react-table";
+import { ITransaction } from '@/types/bTransaction';
 import { Check, PlusCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -25,6 +27,10 @@ export function DataTableFacetedFilter({
   column,
   title,
   options,
+}: {
+  column: Column<ITransaction>;
+  title: string;
+  options: string[];
 }) {
   const facets = column?.getFacetedUniqueValues()
   const selectedValues = new Set(column?.getFilterValue())

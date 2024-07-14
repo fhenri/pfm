@@ -1,17 +1,16 @@
+export default async function getBufferFromFile(file: File): Promise<Buffer> {
 
-export default async function getBufferFromFile(file: File): Buffer {
-
-    // get reader from File
     const fileReader = file.stream().getReader();
     const fileDataU8: number[] = [];
 
-    // read the file
-    while (true){
-    const {done,value} = await fileReader.read();
+    while (true) {
+        const { done, value } = await fileReader.read();
 
-    if (done) break;
-        fileDataU8.push(...value);
+        if (done) break;
+        // Convert value (Uint8Array) to an array before spreading
+        fileDataU8.push(...Array.from(value));
     }
 
-    return Buffer.from(fileDataU8, 'binary');
+    // Create a Buffer from a Uint8Array created from fileDataU8
+    return Buffer.from(new Uint8Array(fileDataU8));
 }

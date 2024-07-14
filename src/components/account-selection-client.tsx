@@ -16,7 +16,7 @@ import { useFormStatus, useFormState } from 'react-dom'
 import { setFormAccount } from "@/actions/actAction";
 import { IAccount } from '@/types/bAccount';
 
-const AccountDetails = ({account}) => {
+const AccountDetails = ({ account }: { account: IAccount }) => {
 
     /*
     const accountDescription = account.description;
@@ -57,9 +57,9 @@ const AccountDetails = ({account}) => {
 const AccountSelectionClient = ({ account, accounts }: { account: IAccount, accounts: IAccount[] }) => {
 
     const router = useRouter();
-    const accountChange = (event) => {
+    const accountChange = (event: string) => {
         //router.push(`/banking?accountId=${event}`)
-        return (event ? router.push(`/banking?accountId=${event}`) : router.push('/banking'));
+        return (event === '_' ? router.push('/banking') : router.push(`/banking?accountId=${event}`));
     }
 
     return (
@@ -70,7 +70,7 @@ const AccountSelectionClient = ({ account, accounts }: { account: IAccount, acco
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem > -- All Account -- </SelectItem>
+              <SelectItem value="_"> -- All Account -- </SelectItem>
               {accounts.map((account) => (
                 <SelectItem key={account._id} value={account.accountNumber}>
                   {account.accountNumber}

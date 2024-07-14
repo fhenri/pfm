@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import bAccount from '@/types/bAccount';
+import bAccount, { IAccount } from '@/types/bAccount';
 
 export async function setFormAccount (
   prevState: { message: string },
@@ -9,11 +9,12 @@ export async function setFormAccount (
 ): Promise<{ message: string }> {
   try {
     let account = await bAccount.findById(formData.get('id'));
-    if (account == null) {
+    if (account === null) {
       return { message: "Failed to load account" };
     }
-    account.description = formData.get('description');
-    account.save();
+
+    account.description = formData.get('description') as string;
+    await account.save();
 
     revalidatePath("/banking");
     return { message: "update account" };

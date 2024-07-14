@@ -5,7 +5,7 @@ import ExchangeRate from '@/types/currencyExchangeRate';
 export async function getAmountEUR (
     fromCurrency: string,
     amount: number,
-    transactionDate: date): number {
+    transactionDate: Date): Promise<number> {
     try {
         if (fromCurrency == 'EUR') {
             return amount;
@@ -39,7 +39,7 @@ export async function getAmountEUR (
 export async function getDBRate(
     fromCurrency: string,
     toCurrency: string,
-    date: Date): number {
+    date: Date): Promise<number> {
 
     const dbRate = await ExchangeRate.findOne({
         FromCurrency: fromCurrency,

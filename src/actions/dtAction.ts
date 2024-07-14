@@ -6,15 +6,15 @@ import bTransaction from '@/types/bTransaction';
 import Category from '@/types/txCategory';
 
 export async function setFormComment (
-  prevState: { message: string },
+  prevState: { message: string } | null,
   formData: FormData,
 ): Promise<{ message: string }> {
   try {
     let tx = await bTransaction.findById(formData.get('id'));
-    if (tx == null) {
+    if (tx === null) {
       return { message: "Failed to load transaction" };
     }
-    tx.Comment = formData.get('comment');
+    tx.Comment = formData.get('comment') as string;
     tx.save();
 
     revalidatePath("/banking");
@@ -31,14 +31,14 @@ export async function setFormCategory (
 ): Promise<{ message: string }> {
   try {
     let tx = await bTransaction.findById(formData.get('id'));
-    if (tx == null) {
+    if (tx === null) {
       return { message: "Failed to load transaction" };
     }
 
-    const action = formData.get('action');
+    const action = formData.get('action') as string;
 
     if (action === 'push') {
-        const newCategory = formData.get('category').trim();
+        const newCategory = (formData.get('category') as string)?.trim();
 
         if (tx.Categories.indexOf(newCategory) === -1) {
             tx.Categories.push(newCategory);
@@ -56,7 +56,7 @@ export async function setFormCategory (
         }
         
     } if (action === 'splice') {
-        const category = formData.get('category');
+        const category = formData.get('category') as string;
         const index = tx.Categories.indexOf(category);
         if (index > -1) {
           tx.Categories.splice(index, 1); // 2nd parameter means remove one item only
@@ -67,7 +67,7 @@ export async function setFormCategory (
     revalidatePath("/");
     return { message: "loaded transaction file" };
   } catch (e) {
-      console.log(e);
+    console.log(e);
     return { message: "Failed to load file" };
   }
 }

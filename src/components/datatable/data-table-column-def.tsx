@@ -3,7 +3,7 @@
 import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
-import ITransaction from '@/types/bTransaction';
+import { ITransaction } from '@/types/bTransaction';
 import DataTableComment from './data-table-comment';
 import DataTableCategory from './data-table-category';
 
@@ -117,8 +117,8 @@ export const DataTableColumns: ColumnDef<ITransaction>[] = [
     cell: ({ row }) => (
         <DataTableCategory txId={row.getValue("id")} txCategories={row.getValue("Categories")} />
     ),
-    filterFn: (row, columnId, filterValue) => {
-        const rowCategories = row.getValue(columnId);
+    filterFn: (row, columnId, filterValue: string[]) => {
+        const rowCategories: string[] = row.getValue(columnId);
         // Check if any of the row's categories are in the selected filter values
         return filterValue.some(filterVal => rowCategories.includes(filterVal));
     },

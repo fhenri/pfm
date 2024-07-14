@@ -28,7 +28,7 @@ export async function getCurrentUserProfile(user) {
 }
 
 export async function getUserAvailableProfile(user) {
-    const dbUser:User = await User.findOne({ name: user.name});
+    const dbUser = await User.findOne({ name: user.name}) as User;
     return dbUser.profileList;
 }
 
