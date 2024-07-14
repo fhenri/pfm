@@ -8,7 +8,6 @@ export interface IProfile {
 }
 
 export interface IUser {
-    _id: string;
     name: string;
     profileList: IProfile[];
 }
@@ -28,10 +27,6 @@ const profileSchema = new mongoose.Schema({
 }, { _id : false });
 
 const userSchema = new mongoose.Schema({
-    _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-    },
     name: {
         type: String,
         required: true,

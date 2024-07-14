@@ -29,6 +29,7 @@ export async function getCurrentUserProfile(user) {
 
 export async function getUserAvailableProfile(user) {
     const dbUser = await User.findOne({ name: user.name}) as User;
+    if (dbUser === null) return null;
     return dbUser.profileList;
 }
 
@@ -48,10 +49,12 @@ export async function addSvcProfile(user, profile: string) {
     }
 
     try {
-        const dbUser: User = await User.findOne({ name: user.name });
+        let dbUser: User = await User.findOne({ name: user.name });
         if (!dbUser) {
-            console.error("User not found.");
-            return;
+            // this is only case where we'll create the user
+            console.error("User not found - creating");
+            dbUser = new User({ name: user.name, profileList: [] });
+            await dbUser.save();
         }
 
         // Check if profile with the same name already exists

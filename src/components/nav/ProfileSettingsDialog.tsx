@@ -25,7 +25,6 @@ import ProfileDetailsElement from "./ProfileDetailsElement"
 
 import { addProfile } from "@/actions/usAction";
 
-
 const ProfileSettingsDialog = ({isOpen, callback, profileList}) => {
 
   const [state, formActionAddProfile] = useFormState(addProfile, null)
@@ -49,14 +48,14 @@ const ProfileSettingsDialog = ({isOpen, callback, profileList}) => {
         </DialogHeader>
         <Tabs defaultValue="account" className="w-[500px]">
           <TabsList className="">
-            { profileList.map((profile, index) => (
+            { profileList && profileList.map((profile, index) => (
             <TabsTrigger className="w-16" key={index} value={profile.name}>{profile.name}</TabsTrigger>
             ))}
             <TabsTrigger value="new">
                 <CirclePlus className="w-4"/><span className="ml-2">Add</span>
             </TabsTrigger>
           </TabsList>
-          { profileList.map((profile, index) => (
+          { profileList && profileList.map((profile, index) => (
             <ProfileDetailsElement key={index} profile={profile}/>
           ))}
           <TabsContent value="new">

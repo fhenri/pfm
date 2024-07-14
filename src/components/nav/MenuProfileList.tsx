@@ -11,7 +11,8 @@ import { useFormStatus, useFormState } from 'react-dom'
 import { setUserProfileForm } from "@/actions/usAction";
 
 const MenuProfileList = ({profileList, profileSelected, onSelectItem}) => {
-    const [state, userAction] = useFormState(setUserProfileForm, null)
+
+  const [state, userAction] = useFormState(setUserProfileForm, null)
 
   return (
     <>
@@ -20,7 +21,7 @@ const MenuProfileList = ({profileList, profileSelected, onSelectItem}) => {
         <span>Profile Settings</span>
     </DropdownMenuItem>
     <DropdownMenuRadioGroup value={profileSelected} onValueChange={userAction}>
-      { profileList.map((profile, index) => (
+      { profileList && profileList.map((profile, index) => (
           <DropdownMenuRadioItem key={index} value={profile.name}>
               <span className="text-xs">{profile.name}</span>
           </DropdownMenuRadioItem>
