@@ -2,6 +2,7 @@
 
 import { useContext, useState } from "react";
 import { useFormStatus, useFormState } from 'react-dom'
+import { Badge } from "@/components/ui/badge"
 import { setFormCategory } from "@/actions/dtAction";
 import { CategoryContext } from './transaction-table-client';
 
@@ -10,7 +11,6 @@ const DataTableCategory = ({ txId, txCategories }:
 
     const { categoryList, setCategoryList } = useContext(CategoryContext);
     const [state, formCategoryAction] = useFormState(setFormCategory, { message: "" })
-
 
     const updateCategory = (target: HTMLInputElement, newCategory: string) => {
         if (Boolean(newCategory)) {
@@ -45,7 +45,12 @@ const DataTableCategory = ({ txId, txCategories }:
         formData.append('category', (event.target as HTMLInputElement).outerText);
         formCategoryAction(formData);
     }
-
+/*
+                    <span key={category} id={category} className="tx-category mx-1"
+                          onClick={removeCategory}>
+                        {category}
+                    </span>
+*/
     return (
         <form action={formCategoryAction} id="category">
             <input type="hidden" name="id" value={txId} />
@@ -55,10 +60,15 @@ const DataTableCategory = ({ txId, txCategories }:
                     onKeyDown={categoryKeyDown}/>
             <div>
                 {txCategories.map(category => (
-                    <span key={category} id={category} className="tx-category mx-1"
-                          onClick={removeCategory}>
-                        {category}
-                    </span>
+                  <Badge
+                    id={category}
+                    variant="outline"
+                    key={category}
+                    onClick={removeCategory}
+                    className="rounded-sm mx-1 px-1 font-normal cursor-default">
+                    {category}
+                  </Badge>
+
                 ))}
             </div>
         </form>
