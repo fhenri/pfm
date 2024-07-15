@@ -43,7 +43,7 @@ const NavBar = () => {
         <a href="https://cloud06.io/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <Image src="/favicon.png" width="40" height="20" className="mr-3 h-6 sm:h-9" alt="cloud06.io" />
           <div className="flex flex-col">
-              <span className="self-center whitespace-nowrap tracking-wider uppercase text-xl font-semibold dark:text-white">
+              <span className="self-center whitespace-nowrap tracking-widest uppercase text-xl font-semibold dark:text-white">
                 Cloud06 - PFM
               </span>
               <span className="self-center whitespace-nowrap text-xs text-gray-400 uppercase dark:text-white">
