@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link";
+import { usePathname } from 'next/navigation'
 
 import { LogOut } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -37,19 +38,28 @@ import MenuProfileList from "@/components/nav/MenuProfileList"
 
 import bankFileConfig from '@/config/parser.config.json';
 
+const MyLinkForPath = ({ path, children }) => {
+    const pathname = usePathname();
+
+    if (pathname === path) {
+        return (
+            <Link href={path} aria-current="page"
+                  className="block py-2 px-3 md:p-0 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:dark:text-blue-500 uppercase">
+                {children}
+            </Link>
+    )} else {
+        return (
+            <Link href={path}
+                  className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 uppercase">
+                {children}
+            </Link>
+    )}
+
+}
+
 const LoggedInUserMenu = ({ user, serializedList, profileSelected }) => {
 //:{ user: Any, profileList:Any, profileSelected: string } => {
 
-    /*
-    // used to display active link but required use client code
-    const pathname = usePathname();
-
-    function isActive (linkPathName: string) {
-        return pathname === linkPathName;
-    }
-    aria-current="page"
-    */
-    //const [user, profileSelected] = [props.user, props.profileSelected];
     const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false)
     const profileList = JSON.parse(serializedList);
 
@@ -103,16 +113,16 @@ const LoggedInUserMenu = ({ user, serializedList, profileSelected }) => {
       <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
         <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
           <li>
-            <Link href="/dashboard" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 uppercase">Dashboard</Link>
+            <MyLinkForPath path="/dashboard">Dashboard</MyLinkForPath>
           </li>
           <li>
-            <Link href="/analysis" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 uppercase">Analysis</Link>
+            <MyLinkForPath path="/analysis">Analysis</MyLinkForPath>
           </li>
           <li>
-            <Link href="/banking" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 uppercase">Banking</Link>
+            <MyLinkForPath path="/banking">Banking</MyLinkForPath>
           </li>
           <li>
-            <Link href="/budget" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 uppercase">Budget</Link>
+            <MyLinkForPath path="/budget">Budget</MyLinkForPath>
           </li>
         </ul>
       </div>
