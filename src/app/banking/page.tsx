@@ -141,6 +141,6 @@ const getTransactionData = async(
     }
 }
 
-//export default withPageAuthRequired(BankingPage, { returnTo: "/banking" });
+export default withPageAuthRequired(BankingPage, { returnTo: "/banking" });
 //export default withPageAuthRequired(BankingPage);
-export default BankingPage;
+//export default BankingPage;
