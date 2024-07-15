@@ -15,10 +15,27 @@ interface UserAuth0 {
     picture: string;
 }
 
-const NavBar = async () => {
+const NavBarUser = async () => {
     const user = (await getSession())?.user;
-    const profileSelected = await getCurrentUserProfile(user);
-    const profileList = await getUserAvailableProfile(user);
+
+    if (user) {
+        const profileSelected = await getCurrentUserProfile(user);
+        const profileList = await getUserAvailableProfile(user);
+        return (
+        <LoggedInUserMenu
+            user={user}
+            serializedList={JSON.stringify(profileList)}
+            profileSelected={profileSelected}/>
+        )
+    } else {
+        //return (<Button asChild variant="destructive" className="mx-4">
+        return (<Button asChild className="mx-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                    <a href="/api/auth/login">Login</a>
+                </Button>);
+    }
+}
+
+const NavBar = () => {
 
     return (
     <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
@@ -34,12 +51,7 @@ const NavBar = async () => {
               </span>
           </div>
         </a>
-        {user ? <LoggedInUserMenu
-                    user={user}
-                    serializedList={JSON.stringify(profileList)}
-                    profileSelected={profileSelected}/>
-              : <Button asChild className="mx-4"><a href="/api/auth/login">Login</a></Button>
-        }
+        <NavBarUser />
       </div>
     </nav>
     );
