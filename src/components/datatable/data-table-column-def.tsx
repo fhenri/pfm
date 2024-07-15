@@ -22,6 +22,9 @@ export const DataTableColumns: ColumnDef<ITransaction>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("AccountNumber")}</div>
     ),
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: "TransactionDate",

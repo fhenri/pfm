@@ -41,11 +41,15 @@ const defaultContextValue: CategoryContextType = {
   setCategoryList: () => {}
 };
 
+const accountListLocal = [
+    'MCB 000450784754 (MUR)',
+    'Credit Mutuel 000451204441 (EUR)'
+]
 export const CategoryContext = createContext<CategoryContextType>(defaultContextValue);
 
 const TransactionTableClient = (
-    { transactions, categories, isAccountSelected }:
-    { transactions: ITransaction[] | null, categories: ICategory[], isAccountSelected: boolean }) => {
+    { isAccountSelected, accounts, transactions, categories }:
+    { isAccountSelected: boolean, accounts: IAccount[], transactions: ITransaction[] | null, categories: ICategory[] }) => {
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -57,6 +61,10 @@ const TransactionTableClient = (
   const [categoryList, setCategoryList] = useState<string[]>(
       categories.map((category) => category.CategoryName)
   );
+  const [accountList, setAccountList] = useState<string[]>(
+      accounts.map((account) => account.accountNumber)
+  );
+
   const { toast } = useToast()
 
   const table = useReactTable({
@@ -91,8 +99,8 @@ const TransactionTableClient = (
   })
 
   return (
-    <div className="w-full">
-      <DataTableToolbar table={table} categoryList={categoryList} />
+    <div className="w-full space-y-4">
+      <DataTableToolbar table={table} categoryList={categoryList} accountList={accounts}/>
       <div className="rounded-md border">
         <Table className="text-xs leading-3">
           <TableHeader className="">

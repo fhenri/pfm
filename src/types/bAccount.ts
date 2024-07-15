@@ -9,6 +9,10 @@ export interface IAccount {
     currency: string;
 }
 
+export function instanceOfAccount(object: any): object is Account {
+    return 'accountNumber' in object;
+}
+
 const accountSchema = new mongoose.Schema({
   _id: {
     type: String,

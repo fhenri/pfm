@@ -17,21 +17,25 @@ interface DataTableToolbarProps<TData> {
 
 export function DataTableToolbar<TData>({
   table,
-  categoryList
+  categoryList,
+  accountList
 }: DataTableToolbarProps<TData>) {
     return (
-      <div className="flex items-center py-4">
-        <datalist id="categories">
-            {categoryList.map((category) => (
-                <option key={category} value={category} />
-            ))}
-        </datalist>
+    <div className="flex items-center justify-between">
+      <div className="flex flex-1 items-center space-x-2">
         <Input placeholder="Search transactions..."
                value={(table.getColumn("Description")?.getFilterValue() as string) ?? ""}
-               className="h-8 max-w-sm mr-3"
+               className="h-8 max-w-sm"
                onChange={(event) =>
                  table.getColumn("Description")?.setFilterValue(event.target.value)
                } />
+        {table.getColumn("AccountNumber") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("AccountNumber")}
+            title="Select Account"
+            options={accountList}
+          />
+        )}
         {table.getColumn("Categories") && (
           <DataTableFacetedFilter
             column={table.getColumn("Categories")}
@@ -39,6 +43,12 @@ export function DataTableToolbar<TData>({
             options={categoryList}
           />
         )}
+        <datalist id="categories">
+            {categoryList.map((category) => (
+                <option key={category} value={category} />
+            ))}
+        </datalist>
+      </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="h-8 ml-auto">

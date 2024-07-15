@@ -32,6 +32,7 @@ import DataTableClient from '@/components/datatable/DataTableClient';
         <TransactionTableClient transactions={txList} />
 
         <AccountSelectionClient account={selectAccount} accounts={accountList}/>
+        <AccountSelectionClient account={selectAccountJson} accounts={accountListJson}/>
         <DataTableClient transactions={txListJson} categories={categoryListJson}/>
         <DataTableClient transactions={txList} categories={categoryList}/>
         <DataTableClient
@@ -61,9 +62,9 @@ import DataTableClient from '@/components/datatable/DataTableClient';
     const selectAccountJson = JSON.parse(JSON.stringify(selectAccount));
     return (
         <>
-        <AccountSelectionClient account={selectAccountJson} accounts={accountListJson}/>
         <TransactionTableClient
             isAccountSelected={isAccountSelected}
+            accounts={accountListJson}
             transactions={txListDeserialize}
             categories={categoryListJson}/>
         </>
