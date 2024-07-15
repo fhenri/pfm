@@ -51,8 +51,9 @@ async function main() {
     //await connectToMongoDB();
     const db = await mongoose.connect(process.env.MONGODB_URI!);
     await importHistoricalRates('MUR', 'EUR', process.cwd() + '/script/EUR_MUR_Historical_Data.csv');
+    console.log("complete loading ...")
     //await closeMongoDBConnection();
-    //db.disconnect();
+    //await db.disconnect();
     //mongoose.connection.close()
 
 }

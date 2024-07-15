@@ -41,10 +41,11 @@ export async function getDBRate(
     toCurrency: string,
     date: Date): Promise<number> {
 
+    console.log("search exchange rate with: ", fromCurrency, toCurrency, date);
     const dbRate = await ExchangeRate.findOne({
         FromCurrency: fromCurrency,
         ToCurrency: toCurrency,
-        Date: date,
+        RateDate: date,
     });
     if (dbRate != null) {
         return dbRate.Rate;
@@ -63,7 +64,7 @@ export async function saveDBRate(
         _id: new mongoose.Types.ObjectId(),
         FromCurrency: fromCurrency,
         ToCurrency: toCurrency,
-        Date: date,
+        RateDate: date,
         Rate: rate
     });
     dbRate.save();

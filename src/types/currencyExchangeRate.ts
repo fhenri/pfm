@@ -3,7 +3,7 @@ import mongoose, { Document, Model } from "mongoose";
 export interface IExchangeRate {
     FromCurrency: string,
     ToCurrency: string,
-    Date: Date,
+    RateDate: Date,
     Rate: number,
 }
 
@@ -16,7 +16,7 @@ const exchangeRateSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Date: {
+  RateDate: {
     type: Date,
     required: true,
   },

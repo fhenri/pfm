@@ -26,6 +26,7 @@ export const DataTableColumns: ColumnDef<ITransaction>[] = [
   {
     accessorKey: "TransactionDate",
     enableResizing: true,
+    enableHiding: false,
     header: ({ column }) => {
       return (
         <Button variant="ghost"
@@ -43,6 +44,7 @@ export const DataTableColumns: ColumnDef<ITransaction>[] = [
   {
     accessorKey: "Description",
     enableResizing: true,
+    enableHiding: false,
     size: 60,
     maxSize: 80,
     header: ({ column }) => {
