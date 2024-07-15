@@ -27,7 +27,7 @@ export async function getAmountEUR (
             */
             return amount;
         } else {
-            console.log(`using db rate: Rate: ${dbRate} and amount: ${amount} = ${amount * dbRate}`);
+            console.log(`using db-rate: Rate: ${dbRate} and amount: ${amount} = ${amount * dbRate}`);
             return amount * dbRate;
         }
     } catch (e) {
@@ -39,14 +39,19 @@ export async function getAmountEUR (
 export async function getDBRate(
     fromCurrency: string,
     toCurrency: string,
-    date: Date): Promise<number> {
+    txDate: Date): Promise<number> {
+
+    const endOfDay = new Date(txDate);
+    endOfDay.setDate(txDate.getDate() + 1);
 
     const dbRate = await ExchangeRate.findOne({
         FromCurrency: fromCurrency,
         ToCurrency: toCurrency,
-        RateDate: date,
+        RateDate: {
+            $gte: txDate,
+            $lte: endOfDay
+        }
     });
-    console.log("search exchange rate with: ", fromCurrency, toCurrency, date, dbRate);
 
     if (dbRate != null) {
         return dbRate.Rate;

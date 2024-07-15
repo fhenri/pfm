@@ -41,12 +41,12 @@ export class mcbcsvTransactionImportStrategy implements ITransactionImportStrate
                         const MoneyOut = results[result][4].replace(',', '');
                         const MoneyIn = results[result][5].replace(',', '');
                         const amount = MoneyIn > 0 ? MoneyIn : -MoneyOut;
-                        const transactionDate = Date.parse(results[result][0]);
+                        const transactionDate = new Date(results[result][0]);
                         const dbTransaction = await bTransaction.create({
                             _id: transactionId,
                             AccountNumber: accountNumber,
                             TransactionDate: transactionDate,
-                            ValueDate: Date.parse(results[result][1]),
+                            ValueDate: Date.parse(results[result][1]) as Date,
                             Description: results[result][3],
                             Comment: '',
                             Categories: await getCategoryForTransaction(results[result][3]),
