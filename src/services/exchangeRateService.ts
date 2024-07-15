@@ -11,10 +11,10 @@ export async function getAmountEUR (
             return amount;
         }
         const baseCurrency = 'EUR';
-        const currencyApi = new CurrencyAPI(process.env.CURRENCY_API_KEY);
         const dbRate = await getDBRate(fromCurrency, baseCurrency, transactionDate);
         if (dbRate == 1) {
             console.log("making api call to get rate for date:", transactionDate);
+            const currencyApi = new CurrencyAPI(process.env.CURRENCY_API_KEY);
             /*
             const apiData = await currencyApi.historical({
                 date: '2024-05-22',
@@ -41,12 +41,13 @@ export async function getDBRate(
     toCurrency: string,
     date: Date): Promise<number> {
 
-    console.log("search exchange rate with: ", fromCurrency, toCurrency, date);
     const dbRate = await ExchangeRate.findOne({
         FromCurrency: fromCurrency,
         ToCurrency: toCurrency,
         RateDate: date,
     });
+    console.log("search exchange rate with: ", fromCurrency, toCurrency, date, dbRate);
+
     if (dbRate != null) {
         return dbRate.Rate;
     } else {
