@@ -12,6 +12,7 @@ export interface ITransaction {
     Balance: number;
     Categories: string[];
 
+    Currency: string;
     Amount: number;
     AmountEUR: number;
 }
@@ -47,6 +48,7 @@ const transactionSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  Currency: String,
   AmountEUR: {
     type: Number,
     required: true,

@@ -1,11 +1,11 @@
 import React from 'react';
 import Image from "next/image";
 import { getSession } from '@auth0/nextjs-auth0';
-import { getUserAvailableProfile, getCurrentUserProfile } from "@/services/userService";
+import { getUserAvailableProfile, getCurrentUserProfile } from "@/services/user-service";
 
 import { Button } from "@/components/ui/button"
-import LoggedInUserMenu from '@/components/nav/LoggedInUserMenu';
-import ProfileListClient from '@/components/nav/ProfileListClient';
+import LoggedInUserMenu from '@/components/nav/logged-in-user-menu';
+import ProfileListClient from '@/components/nav/profile-list-client';
 
 import mongoose from "mongoose";
 

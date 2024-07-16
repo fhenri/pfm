@@ -31,12 +31,11 @@ interface UserAuth0 {
     picture: string;
 }
 
-import FileImportDialog from "@/components/nav/FileImportDialog"
-import FileImportForm from "@/components/nav/FileImportForm"
-import ProfileSettingsDialog from "@/components/nav/ProfileSettingsDialog"
-import MenuProfileList from "@/components/nav/MenuProfileList"
+import FileImportDialog from "@/components/nav/file-import-dialog"
+import ProfileSettingsDialog from "@/components/nav/profile-settings-dialog"
+import MenuProfileList from "@/components/nav/profile-list-menu"
 
-import bankFileConfig from '@/config/parser.config.json';
+import bankFileConfig from '@/config/parser-config.json';
 
 const MyLinkForPath = ({ path, children }) => {
     const pathname = usePathname();

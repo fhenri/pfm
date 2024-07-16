@@ -3,7 +3,7 @@
 import mongoose, { Connection } from "mongoose";
 import Papa from 'papaparse';
 import fs from 'fs';
-import { saveDBRate } from '@/services/exchangeRateService';
+import { saveDBRate } from '@/services/exchange-rate-service';
 
 type CsvRowType = {
     Date: Date;

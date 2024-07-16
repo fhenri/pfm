@@ -1,8 +1,9 @@
 import { Ofx, OfxStructure } from 'ofx-data-extractor'
 import bAccount from '@/types/bAccount';
 import bTransaction from '@/types/bTransaction';
+import { TransactionImportStrategyFactory } from "@/parser/import-strategy";
 
-import getBufferFromFile from "@/util/FileUtil";
+import getBufferFromFile from "@/util/file-utils";
 
 export class ofxTransactionImportStrategy implements ITransactionImportStrategy {
   async importTransactions(formData: FormData): Promise<{ message: string }> {

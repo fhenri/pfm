@@ -4,8 +4,9 @@ import fs from "node:fs/promises";
 
 import bAccount from '@/types/bAccount';
 import bTransaction from '@/types/bTransaction';
-import {getCategoryForTransaction} from '@/services/categoryService';
-import {getRate, getAmountEUR} from '@/services/exchangeRateService';
+import {getCategoryForTransaction} from '@/services/category-service';
+import {getRate, getAmountEUR} from '@/services/exchange-rate-service';
+import { TransactionImportStrategyFactory } from "@/parser/import-strategy";
 
 export class mcbcsvTransactionImportStrategy implements ITransactionImportStrategy {
 

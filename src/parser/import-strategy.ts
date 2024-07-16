@@ -1,8 +1,8 @@
-import { cmutofxTransactionImportStrategy } from './banks/cmutofxTransactionImportStrategy';
-import { ofxTransactionImportStrategy } from './banks/ofxTransactionImportStrategy';
-import { mcbcsvTransactionImportStrategy } from './banks/mcbcsvTransactionImportStrategy';
+import { cmutofxTransactionImportStrategy } from './banks/cmut-ofx-import-strategy';
+import { ofxTransactionImportStrategy } from './banks/ofx-import-strategy';
+import { mcbcsvTransactionImportStrategy } from './banks/mcb-csv-import-strategy';
 
-import bankfileconfig from '@/config/parser.config.json';
+import bankfileconfig from '@/config/parser-config.json';
 
 export interface ITransactionImportStrategy {
   importTransactions(formData: FormData): Promise<{ message: string }>;

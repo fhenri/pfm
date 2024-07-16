@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useFormStatus, useFormState } from 'react-dom'
-import { setFormComment } from "@/actions/dtAction";
+import { setFormComment } from "@/actions/datatable-action";
 import { Input } from "@/components/ui/input"
 
 const DataTableComment = ({ txId, txComment }:

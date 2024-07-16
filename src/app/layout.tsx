@@ -1,8 +1,8 @@
 import './globals.css';
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import NavBar from "@/components/NavBar";
-import Footer from "@/components/Footer";
+import NavBar from "@/components/nav-bar";
+import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster"
 
 import { connectToMongoDB } from '@/lib/mongo';

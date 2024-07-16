@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import { useFormStatus, useFormState } from 'react-dom'
-import { setUserProfileForm } from "@/actions/usAction";
+import { setUserProfileForm } from "@/actions/user-action";
 
 const MenuProfileList = ({profileList, profileSelected, onSelectItem}) => {
 

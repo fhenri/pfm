@@ -4,7 +4,7 @@ import bAccount, { IAccount } from '@/types/bAccount';
 import Category, { ICategory } from '@/types/txCategory';
 import TransactionTableClient from '@/components/datatable/transaction-table-client';
 import AccountSelectionClient from '@/components/account-selection-client';
-import * as userService from '@/services/userService';
+import * as userService from '@/services/user-service';
 
 const BankingPage = async ({ params, searchParams }: {
                              params: { slug: string | undefined }

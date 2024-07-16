@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import FileImportForm from "./FileImportForm";
+import FileImportForm from "./file-import-form";
 
 const FileImportDialog = (props) => {
 

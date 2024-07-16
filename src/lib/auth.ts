@@ -1,5 +1,5 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import { getMyUser } from '@/services/userService';
+import { getMyUser } from '@/services/user-service';
 
 export async function getSessionUser() {
   const session = await getSession();

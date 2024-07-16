@@ -1,6 +1,6 @@
 "use server";
 
-import * as userService from '@/services/userService';
+import * as userService from '@/services/user-service';
 import { getSessionUser } from '@/lib/auth';
 import { revalidatePath } from "next/cache";
 

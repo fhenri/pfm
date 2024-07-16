@@ -21,9 +21,9 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
-import ProfileDetailsElement from "./ProfileDetailsElement"
+import ProfileDetailsElement from "./profile-details-element"
 
-import { addProfile } from "@/actions/usAction";
+import { addProfile } from "@/actions/user-action";
 
 const ProfileSettingsDialog = ({isOpen, callback, profileList}) => {
 

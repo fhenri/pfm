@@ -1,5 +1,5 @@
 import mongoose, { Document, Model } from "mongoose";
-import IAccount from "./bAccount";
+import { IAccount } from "./bAccount";
 
 export interface IProfile {
     name: string;

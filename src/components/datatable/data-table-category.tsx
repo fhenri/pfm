@@ -3,7 +3,7 @@
 import { useContext, useState } from "react";
 import { useFormStatus, useFormState } from 'react-dom'
 import { Badge } from "@/components/ui/badge"
-import { setFormCategory } from "@/actions/dtAction";
+import { setFormCategory } from "@/actions/datatable-action";
 import { CategoryContext } from './transaction-table-client';
 
 const DataTableCategory = ({ txId, txCategories }:

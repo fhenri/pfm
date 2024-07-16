@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/tabs"
 
 import { useFormStatus, useFormState } from 'react-dom'
-import * as userAction from "@/actions/usAction";
+import * as userAction from "@/actions/user-action";
 
 const ProfileAccountElement = ({profileName, account}) => {
     const [remAccountstate, formActionRemAccountProfile] =

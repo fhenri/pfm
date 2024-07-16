@@ -1,8 +1,9 @@
 import { Ofx, OfxStructure } from 'ofx-data-extractor';
 import bAccount from '@/types/bAccount';
 import bTransaction from '@/types/bTransaction';
-import {getCategoryForTransaction} from '@/services/categoryService';
-import {getAmountEUR} from '@/services/exchangeRateService';
+import {getCategoryForTransaction} from '@/services/category-service';
+import {getAmountEUR} from '@/services/exchange-rate-service';
+import { TransactionImportStrategyFactory } from "@/parser/import-strategy";
 
 export class cmutofxTransactionImportStrategy implements ITransactionImportStrategy {
 

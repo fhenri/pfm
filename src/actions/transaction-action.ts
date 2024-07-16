@@ -1,6 +1,6 @@
 "use server";
 
-import { TransactionImportStrategyFactory } from "@/parser/ImportStrategy";
+import { TransactionImportStrategyFactory } from "@/parser/import-strategy";
 import { revalidatePath } from "next/cache";
 
 export async function importTransaction(

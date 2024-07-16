@@ -13,7 +13,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import { useFormStatus, useFormState } from 'react-dom'
-import { setFormAccount } from "@/actions/actAction";
+import { setFormAccount } from "@/actions/account-action";
 import { IAccount } from '@/types/bAccount';
 
 const AccountDetails = ({ account }: { account: IAccount }) => {
