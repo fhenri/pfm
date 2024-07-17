@@ -5,7 +5,7 @@ import NavBar from "@/components/nav-bar";
 import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster"
 
-import { connectToMongoDB } from '@/lib/mongo';
+//import dbConnect from '@/lib/mongo';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,8 +19,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  connectToMongoDB();
 
   return (
     <html lang="en">

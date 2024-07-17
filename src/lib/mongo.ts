@@ -1,53 +1,46 @@
-// Importing mongoose library along with Connection type from it
 import mongoose, { Connection } from "mongoose";
 
-// Declaring a variable to store the cached database connection
-declare global {
+const MONGODB_URI = process.env.MONGODB_URI
+
+if (!MONGODB_URI) {
+    throw new Error(
+        'Please define the MONGODB_URI environment variable inside .env.local',
+    )
 }
 
-let cachedConnection: Connection | null = null;
+// cached: { connection?: typeof mongoose; promise?: Promise<typeof mongoose> } = {};
+let cached: Connection = global.mongoose;
 
-// Function to establish a connection to MongoDB
-export async function connectToMongoDB() {
-  // If a cached connection exists, return it
-  if (cachedConnection) {
-    console.log("Using cached db connection");
-    return cachedConnection;
-  }
-  try {
-    // If no cached connection exists, establish a new connection to MongoDB
-
-    // set the connection options
-    const opts = {
-      bufferCommands: false,
-      maxPoolSize: 150,
-      minPoolSize: 30,
-      heartbeatFrequencyMS: 10000,
-    };
-
-    console.log("establish connection to MongoDB - mongoose driver");
-    const cnx = await mongoose.connect(process.env.MONGODB_URI!, opts);
-    // Cache the connection for future use
-    cachedConnection = cnx.connection;
-    // Return the newly established connection
-    return cachedConnection;
-  } catch (error) {
-    // If an error occurs during connection, log the error and throw it
-    console.log(error);
-    throw error;
-  }
+if (!cached) {
+    cached = global.mongoose = { conn: null, promise: null }
 }
 
-export async function closeMongoDBConnection() {
-    try {
-        // If a cached connection exists, close it
-        if (cachedConnection) {
-          await cachedConnection.close();
-          console.log("Closing cached db connection");
-        }
-    } catch (error) {
-        // If an error occurs during connection closure, log the error and throw it
-        console.log(error);
-        throw error;
+async function dbConnect() {
+    if (cached.conn) {
+        console.log("Using cached db connection");
+        return cached.conn
     }
+    if (!cached.promise) {
+        const opts = {
+            bufferCommands: false,
+            maxPoolSize: 150,
+            minPoolSize: 30,
+            heartbeatFrequencyMS: 10000,
+        }
+        cached.promise = mongoose.connect(MONGODB_URI, opts)
+        .then(mongoose => {
+            console.log("establish connection to MongoDB - mongoose driver");
+            return mongoose
+        })
+    }
+    try {
+        cached.conn = await cached.promise
+    } catch (e) {
+        cached.promise = null
+        throw e
+    }
+
+    return cached.conn
 }
+
+export default dbConnect
