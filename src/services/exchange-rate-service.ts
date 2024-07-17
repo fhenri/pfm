@@ -13,9 +13,7 @@ export async function getAmountEUR (
         const baseCurrency = 'EUR';
         const dbRate = await getDBRate(fromCurrency, baseCurrency, transactionDate);
         if (dbRate == 1) {
-            console.log("making api call to get rate for date:", transactionDate);
             const currencyApi = new CurrencyAPI(process.env.CURRENCY_API_KEY);
-            /*
             const apiData = await currencyApi.historical({
                 date: '2024-05-22',
                 base_currency: fromCurrency,
@@ -24,8 +22,6 @@ export async function getAmountEUR (
             await saveDBRate(fromCurrency, baseCurrency, transactionDate, apiRate);
             console.log(`Rate: ${apiRate} and amount: ${amount / apiRate}`);
             return amount / apiRate;
-            */
-            return amount;
         } else {
             console.log(`using db-rate: Rate: ${dbRate} and amount: ${amount} = ${amount * dbRate}`);
             return amount * dbRate;
