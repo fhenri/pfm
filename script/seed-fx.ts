@@ -10,7 +10,6 @@ type CsvRowType = {
     Price: number;
 };
 
-
 async function importHistoricalRates(
     fromCurrency: string,
     toCurrency: string,

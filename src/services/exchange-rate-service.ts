@@ -15,15 +15,18 @@ export async function getAmountEUR (
         if (dbRate == 1) {
             const currencyApi = new CurrencyAPI(process.env.CURRENCY_API_KEY);
             const apiData = await currencyApi.historical({
-                date: '2024-05-22',
+                date: transactionDate.toISOString().split('T')[0],
                 base_currency: fromCurrency,
                 currencies : baseCurrency});
-            const apiRate = apiData.data[fromCurrency].value;
+            if (apiData.message === 'Validation error') {
+                console.error('Currency API error:', apiData.errors);
+                return amount;
+            }
+            const apiRate = apiData.data[baseCurrency].value;
             await saveDBRate(fromCurrency, baseCurrency, transactionDate, apiRate);
-            console.log(`Rate: ${apiRate} and amount: ${amount / apiRate}`);
             return amount / apiRate;
         } else {
-            console.log(`using db-rate: Rate: ${dbRate} and amount: ${amount} = ${amount * dbRate}`);
+            console.log(`using db-rate: Rate: ${dbRate} and amount: ${amount}`);
             return amount * dbRate;
         }
     } catch (e) {
@@ -49,7 +52,7 @@ export async function getDBRate(
         }
     });
 
-    if (dbRate != null) {
+    if (dbRate !== null) {
         return dbRate.Rate;
     } else {
         return 1;
