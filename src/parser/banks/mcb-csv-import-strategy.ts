@@ -1,20 +1,18 @@
 import Papa from 'papaparse';
 import { Readable } from 'stream'
-import fs from "node:fs/promises";
+import { Buffer } from 'buffer';
 
-import bAccount from '@/types/bAccount';
-import bTransaction from '@/types/bTransaction';
-import {getCategoryForTransaction} from '@/services/category-service';
-import {getRate, getAmountEUR} from '@/services/exchange-rate-service';
-import { TransactionImportStrategyFactory } from "@/parser/import-strategy";
+import * as accountService from '@/services/account-service';
+import * as transactionService from '@/services/transaction-service';
+import { ITransactionImportStrategy } from "@/parser/import-strategy";
 
 export class mcbcsvTransactionImportStrategy implements ITransactionImportStrategy {
 
-  private bankConfig: any;
+    private bankConfig: any;
 
-  constructor(bankConfig: any) {
-    this.bankConfig = bankConfig;
-  }
+    constructor(bankConfig: any) {
+        this.bankConfig = bankConfig;
+    }
 
     private async importCSVData(results: string[][]): Promise<void> {
         console.log("import csv results");
@@ -36,51 +34,34 @@ export class mcbcsvTransactionImportStrategy implements ITransactionImportStrate
                     break;
                 default:
                     const transactionId = results[result][2];
-                    let tx = await bTransaction.findById(transactionId);
-                    if (tx == null) {
-                        console.log(`Transaction ${transactionId} not found, creating new transaction`);
-                        const MoneyOut = results[result][4].replace(',', '');
-                        const MoneyIn = results[result][5].replace(',', '');
-                        const amount = MoneyIn > 0 ? MoneyIn : -MoneyOut;
-                        const transactionDate = new Date(results[result][0]);
-                        const dbTransaction = await bTransaction.create({
-                            _id: transactionId,
-                            AccountNumber: accountNumber,
-                            TransactionDate: transactionDate,
-                            ValueDate: Date.parse(results[result][1]) as Date,
-                            Description: results[result][3],
-                            Comment: '',
-                            Categories: await getCategoryForTransaction(results[result][3]),
-                            MoneyOut: MoneyOut,
-                            MoneyIn: MoneyIn,
-                            Amount: amount,
-                            AmountEUR: await getAmountEUR(accountCurrency, amount, transactionDate),
-                            Balance: results[result][6].replaceAll(',', ''),
-                        });
-                        dbTransaction.save();
-                    }
+                    const MoneyOut = results[result][4].replace(',', '');
+                    const MoneyIn = results[result][5].replace(',', '');
+                    const amount = MoneyIn > 0 ? MoneyIn : -MoneyOut;
+                    const transactionDate = new Date(results[result][0]);
+                    transactionService.createTransaction(
+                        transactionId,
+                        accountNumber,
+                        accountCurrency,
+                        transactionDate,
+                        Date.parse(results[result][1]) as Date,
+                        results[result][3],
+                        MoneyOut,
+                        MoneyIn,
+                        amount,
+                        0);
                     break;
             }
         }
 
         const accountId = `${this.bankConfig.alias}-${accountNumber}`;
-        let account = await bAccount.findById(accountId);
-        if (account == null) {
-            console.log(`Account ${accountId} not found, creating new account`);
-            const dbAccount = await bAccount.create({
-                _id: accountId,
-                accountNumber: accountNumber,
-                bankName: this.bankConfig.bank,
-                url: this.bankConfig.url,
-                currency: accountCurrency
-            });
-            dbAccount.save();
-        } else {
-            // only thing that could require an update is BankName
-            account.bankName = this.bankConfig.bank;
-            account.save();
-        }
-
+        const account = accountService.createAccount(
+            accountId,
+            accountNumber,
+            this.bankConfig.bank,
+            this.bankConfig.url,
+            accountCurrency,
+            ''
+        );
     }
 
   async importTransactions(formData: FormData): Promise<{ message: string }> {
@@ -101,13 +82,12 @@ export class mcbcsvTransactionImportStrategy implements ITransactionImportStrate
       complete: (results) => {
         //console.log('Parsed results:', results.data);
         this.importCSVData(results.data);
-        return { message: "CSV transactions imported successfully" };
       },
       error: (error) => {
         console.error('Error parsing CSV:', error);
         return { message: 'Failed to parse CSV' };
       }
     });
-
+    return { message: "CSV transactions imported successfully" };
   }
 }

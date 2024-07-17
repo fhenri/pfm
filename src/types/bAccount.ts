@@ -9,7 +9,7 @@ export interface IAccount {
     currency: string;
 }
 
-export function instanceOfAccount(object: any): object is Account {
+export function instanceOfAccount(object: any): object is IAccount {
     return 'accountNumber' in object;
 }
 

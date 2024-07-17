@@ -48,7 +48,7 @@ const ProfileDetailsElement = ({profile}) => {
       event.preventDefault();
       let formData = new FormData();
       formData.append('profileName', profile.name);
-      formData.append('accountId', accountId.value);
+      formData.append('accountId', event.target.accountId.value);
       formActionAddAccountProfile(formData);
     }
 

@@ -5,7 +5,6 @@ import { getUserAvailableProfile, getCurrentUserProfile } from "@/services/user-
 
 import { Button } from "@/components/ui/button"
 import LoggedInUserMenu from '@/components/nav/logged-in-user-menu';
-import ProfileListClient from '@/components/nav/profile-list-client';
 
 import mongoose from "mongoose";
 

@@ -13,6 +13,7 @@ export async function connectToMongoDB() {
   }
   try {
     // If no cached connection exists, establish a new connection to MongoDB
+    console.log("establish connection to MongoDB - mongoose driver");
     const cnx = await mongoose.connect(process.env.MONGODB_URI!);
     // Cache the connection for future use
     cachedConnection = cnx.connection;

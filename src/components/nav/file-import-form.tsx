@@ -67,7 +67,7 @@ const FileImportForm = (props) => {
             <Label htmlFor="txBank" className="text-right">
               Bank
             </Label>
-            <Select id="txBank" name="txBank" onValueChange={fileTypeChanged}>
+            <Select name="txBank" onValueChange={fileTypeChanged}>
               <SelectTrigger className="w-[260px]">
                 <SelectValue placeholder="Select transaction file type" />
               </SelectTrigger>

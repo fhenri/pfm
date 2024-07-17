@@ -1,9 +1,7 @@
 import { Ofx, OfxStructure } from 'ofx-data-extractor';
-import bAccount from '@/types/bAccount';
-import bTransaction from '@/types/bTransaction';
-import {getCategoryForTransaction} from '@/services/category-service';
-import {getAmountEUR} from '@/services/exchange-rate-service';
-import { TransactionImportStrategyFactory } from "@/parser/import-strategy";
+import * as accountService from '@/services/account-service';
+import * as transactionService from '@/services/transaction-service';
+import { ITransactionImportStrategy } from "@/parser/import-strategy";
 
 export class cmutofxTransactionImportStrategy implements ITransactionImportStrategy {
 
@@ -21,53 +19,36 @@ export class cmutofxTransactionImportStrategy implements ITransactionImportStrat
     const buffer = Buffer.from(await txFile.arrayBuffer());
     const ofx = Ofx.fromBuffer(buffer);
 
-    const ofxContent = ofx.getContent() as OFXStructure;
+    const ofxContent = ofx.getContent() as OfxStructure;
     const ofxAccount = ofxContent.OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS;
 
     const accountId = `${ofxAccount.BANKACCTFROM.BANKID}-${ofxAccount.BANKACCTFROM.BRANCHID}-${ofxAccount.BANKACCTFROM.ACCTID}`;
-    const accountNb = ofxAccount.BANKACCTFROM.ACCTID
-    const accountCurrency = ofxAccount.CURDEF
-    let account = await bAccount.findById(accountId);
-    if (account == null) {
-        console.log(`Account ${accountId} not found, creating new account`);
-        const dbAccount = await bAccount.create({
-            _id: accountId,
-            accountNumber: accountNb,
-            bankName: this.bankConfig.bank,
-            url: this.bankConfig.url,
-            currency: accountCurrency,
-            description: ofxAccount.BANKACCTFROM.ACCTTYPE
-        });
-        dbAccount.save();
-    } else {
-        // only thing that could require an update is BankName
-        account.bankName = this.bankConfig.bank;
-        account.save();
-    }
+    const accountNb = ofxAccount.BANKACCTFROM.ACCTID;
+    const accountCurrency = ofxAccount.CURDEF;
+    const account = accountService.createAccount(
+        accountId,
+        accountNb,
+        this.bankConfig.bank,
+        this.bankConfig.url,
+        accountCurrency,
+        ofxAccount.BANKACCTFROM.ACCTTYPE
+    );
 
     const transactionsList = ofxAccount.BANKTRANLIST.STRTTRN;
     for (const tns of transactionsList) {
         //console.log(transaction);
         const transactionId = tns.FITID;
-        let tx = await bTransaction.findById(transactionId);
-        if (tx == null) {
-            console.log(`Transaction ${transactionId} not found, creating new transaction`);
-            const dbTransaction = await bTransaction.create({
-                _id: transactionId,
-                AccountNumber: accountNb,
-                TransactionDate: Date.parse(tns.DTPOSTED),
-                ValueDate: Date.parse(tns.DTUSER),
-                Description: tns.NAME,
-                Comment: '',
-                Categories: await getCategoryForTransaction(tns.NAME),
-                MoneyOut: tns.TRNTYPE === 'DEBIT' ? tns.TRNAMT : 0,
-                MoneyIn: tns.TRNTYPE === 'CREDIT' ? tns.TRNAMT : 0,
-                Amount: tns.TRNAMT,
-                AmountEUR: await getAmountEUR(accountCurrency, tns.TRNAMT, Date.parse(tns.DTPOSTED)),
-                Balance: 0,
-            });
-            dbTransaction.save();
-        }
+        transactionService.createTransaction(
+            transactionId,
+            accountNb,
+            accountCurrency,
+            Date.parse(tns.DTPOSTED),
+            Date.parse(tns.DTUSER),
+            tns.NAME,
+            tns.TRNTYPE === 'DEBIT' ? tns.TRNAMT : 0,
+            tns.TRNTYPE === 'CREDIT' ? tns.TRNAMT : 0,
+            tns.TRNAMT,
+            0);
     }
 
     return { message: "OFX transactions imported successfully" };

@@ -29,7 +29,9 @@ import { useToast } from "@/components/ui/use-toast"
 
 import { DataTableColumns } from "./data-table-column-def"
 import { DataTableToolbar } from "./data-table-toolbar"
-import ITransaction from '@/types/bTransaction';
+import { ITransaction } from '@/types/bTransaction';
+import { IAccount } from '@/types/bAccount';
+import { ICategory } from '@/types/txCategory';
 
 interface CategoryContextType {
   categoryList: string[];
@@ -41,15 +43,11 @@ const defaultContextValue: CategoryContextType = {
   setCategoryList: () => {}
 };
 
-const accountListLocal = [
-    'MCB 000450784754 (MUR)',
-    'Credit Mutuel 000451204441 (EUR)'
-]
 export const CategoryContext = createContext<CategoryContextType>(defaultContextValue);
 
 const TransactionTableClient = (
-    { isAccountSelected, accounts, transactions, categories }:
-    { isAccountSelected: boolean, accounts: IAccount[], transactions: ITransaction[] | null, categories: ICategory[] }) => {
+    { accounts, transactions, categories }:
+    { accounts: IAccount[], transactions: ITransaction[] | null, categories: ICategory[] }) => {
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -60,9 +58,6 @@ const TransactionTableClient = (
 
   const [categoryList, setCategoryList] = useState<string[]>(
       categories.map((category) => category.CategoryName)
-  );
-  const [accountList, setAccountList] = useState<string[]>(
-      accounts.map((account) => account.accountNumber)
   );
 
   const { toast } = useToast()

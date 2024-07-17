@@ -12,7 +12,7 @@ export async function getUser() {
   if (!session) return { auth0User: null, dbUser: null };
 
   const auth0User = session.user;
-  const dbUser = await getMyUser(auth0User.name);
+  const dbUser = await getMyUser();
 
   return { ...auth0User, ...dbUser };
 }

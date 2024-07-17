@@ -1,6 +1,8 @@
 import CategoryRule, { ICategoryRules } from '@/types/txRules';
+import Category, { ICategory } from '@/types/txCategory';
 
-export async function getCategoryForTransaction(description: string) {
+const getCategoryForTransaction =
+async(description: string):Promise<ICategory[]> => {
     const categoryRules = await getCategoryRules();
     const rule = categoryRules.find((crule) => description.includes(crule._id));
     if (rule) {
@@ -9,7 +11,8 @@ export async function getCategoryForTransaction(description: string) {
     return [];
 }
 
-const getCategoryRules = async():Promise<ICategoryRules[]> => {
+const getCategoryRules =
+async():Promise<ICategoryRules[]> => {
     try {
         return await CategoryRule.find().sort({
             _id: "asc",
@@ -18,4 +21,23 @@ const getCategoryRules = async():Promise<ICategoryRules[]> => {
         console.error(e);
         return [];
     }
+}
+
+const getCategoryData =
+async():Promise<ICategory[]> => {
+    try {
+        const categoryList = await Category.find().sort({
+            CategoryName: "asc",
+        });
+        return categoryList;
+    } catch (e) {
+        console.error(e);
+        return [];
+    }
+}
+
+export {
+    getCategoryForTransaction,
+    getCategoryRules,
+    getCategoryData
 }

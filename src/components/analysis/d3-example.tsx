@@ -10,7 +10,9 @@ function BarChart() {
   const height = 300;
 
   useEffect(() => {
+    if (!svgRef.current) return;
     d3.select(svgRef.current).select("svg").remove();
+
     // Create an SVG container
     const svg = d3.select(svgRef.current)
       .append('svg')

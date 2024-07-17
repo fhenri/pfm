@@ -43,7 +43,6 @@ export async function getCurrentAccountList(user) {
 }
 
 export async function addSvcProfile(user, profile: string) {
-    console.log("Adding profile to user:", user.name, profile)
     if (!profile) {
         console.error("Profile name is required.");
         return;

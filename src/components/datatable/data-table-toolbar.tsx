@@ -10,6 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Table } from "@/components/ui/table"
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -44,7 +45,7 @@ export function DataTableToolbar<TData>({
           />
         )}
         <datalist id="categories">
-            {categoryList.map((category) => (
+            {categoryList.map((category: string) => (
                 <option key={category} value={category} />
             ))}
         </datalist>
