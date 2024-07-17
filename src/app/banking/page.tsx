@@ -11,6 +11,8 @@ import AccountSelectionClient from '@/components/account-selection-client';
 
 const BankingPage = async () => {
 
+
+    console.log("banking page - Getting current user from service");
     const user = await userService.getMyUser();
     console.log("Getting account list for current user:", user)
     const currentAccountList = await userService.getCurrentAccountList(user) as [string];

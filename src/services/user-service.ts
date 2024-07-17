@@ -5,11 +5,15 @@ import User from '@/types/tenancy';
 import { kv } from "@vercel/kv";
 
 export async function getMyUser() {
+        console.log("getting user from session")
       const session = await getSession();
+        console.log("getting user from session : ", session)
       if (!session) return null;
 
       const auth0User = session.user;
+        console.log("getting user : ", auth0User)
       const dbUser = await User.findOne({ name: auth0User.name});
+        console.log("getting app user : ", dbUser)
 
       if (!dbUser) return { ...auth0User, profile: [] };
       else return { ...auth0User, profile: dbUser.profileList };
