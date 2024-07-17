@@ -12,7 +12,7 @@ export async function getMyUser() {
 
       const auth0User = session.user;
         console.log("getting user : ", auth0User)
-      const dbUser = await User.findOne({ name: auth0User.name});
+      const dbUser = await User.findOne({ name: auth0User.name}).exec();
         console.log("getting app user : ", dbUser)
 
       if (!dbUser) return { ...auth0User, profile: [] };
