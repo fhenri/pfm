@@ -12,7 +12,8 @@ const DataTableCategory = ({ txId, txCategories }:
     const { categoryList, setCategoryList } = useContext(CategoryContext);
     const [state, formCategoryAction] = useFormState(setFormCategory, { message: "" })
 
-    const updateCategory = (target: HTMLInputElement, newCategory: string) => {
+    const updateCategory = (target: HTMLInputElement) => {
+        const newCategory: string = target.value?.trim();
         if (Boolean(newCategory)) {
             let formData = new FormData();
             formData.append('id', txId);
@@ -27,14 +28,12 @@ const DataTableCategory = ({ txId, txCategories }:
     }
 
     const categoryFocusOut = (event: React.FocusEvent<HTMLInputElement>) => {
-        const newCategory = event.target.value.trim();
-        updateCategory(event.target, newCategory);
+        updateCategory(event.target as HTMLInputElement);
     }
 
     const categoryKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Tab" || event.key === "Enter") {
-            const newCategory = (event.target as HTMLInputElement).value.trim();
-            updateCategory(event.target as HTMLInputElement, newCategory);
+            updateCategory(event.target as HTMLInputElement);
         }
     }
 

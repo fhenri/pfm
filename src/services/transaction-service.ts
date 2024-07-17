@@ -53,7 +53,7 @@ const createTransaction = async(
 return tx;
 }
 
-const updateCategory = async(id: string, action:string, category: string) : Promise<void> => {
+const updateCategory = async(id: string, action: string, category: string) : Promise<void> => {
     let tx = await bTransaction.findById(id);
     if (tx === null) {
       return { message: "Failed to load transaction" };
@@ -78,10 +78,10 @@ const updateCategory = async(id: string, action:string, category: string) : Prom
         }
 
     } if (action === 'splice') {
-        const category = category as string;
         const index = tx.Categories.indexOf(category);
         if (index > -1) {
-          tx.Categories.splice(index, 1); // 2nd parameter means remove one item only
+          // 2nd parameter means remove one item only
+          tx.Categories.splice(index, 1);
           tx.save();
         }
     }

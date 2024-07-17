@@ -11,21 +11,14 @@ import AccountSelectionClient from '@/components/account-selection-client';
 
 const BankingPage = async () => {
 
-
-    console.log("banking page - Getting current user from service");
     const user = await userService.getMyUser();
-    console.log("Getting account list for current user:", user)
     const currentAccountList = await userService.getCurrentAccountList(user) as [string];
 
     // we're making this call to make sure we have accounts defined based on list from profile
-    console.log("Getting account list from account :", currentAccountList)
     const accountList:IAccount[]   = await accountService.getAccountFromList(currentAccountList);
-    console.log("Getting tx list from account :", currentAccountList)
     const txList:ITransaction[]    = await transactionService.getTransactionList(currentAccountList);
-    console.log("Getting category list")
     const categoryList:ICategory[] = await categoryService.getCategoryData();
 
-    console.log("serialization for all");
     const accountListJson = JSON.parse(JSON.stringify(accountList));
     const txListJson = JSON.stringify(txList);
     const txListDeserialize = JSON.parse(txListJson, (key, value) => {
@@ -37,7 +30,6 @@ const BankingPage = async () => {
     }) as ITransaction[] | [];
     const categoryListJson = JSON.parse(JSON.stringify(categoryList));
 
-    console.log("rendering");
     return (
         <TransactionTableClient accounts={accountListJson}
                                 transactions={txListDeserialize}
