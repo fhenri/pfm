@@ -8,7 +8,9 @@ export async function setFormAccount (
   formData: FormData,
 ): Promise<{ message: string }> {
   try {
-    accountService.updateDescription(formData.get('id'), formData.get('description') as string);
+    accountService.updateDescription(
+        formData.get('id') as string,
+        formData.get('description') as string);
     revalidatePath("/banking");
     return { message: "update account" };
   } catch (e) {
