@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "seedFX": "tsx --env-file=.env.local script/seedFX.ts",
+    "seedFX": "tsx --env-file=.env.local script/seed-fx.ts",
     "seedCategory": "tsx --env-file=.env.local script/category.ts",
     "dev": "next dev",
     "build": "next build",

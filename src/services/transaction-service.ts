@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import bTransaction, { ITransaction } from '@/types/bTransaction';
 import Category from '@/types/txCategory';
 import { getCategoryForTransaction } from '@/services/category-service';
@@ -76,8 +77,7 @@ const updateCategory = async(id: string, action: string, category: string) : Pro
           });
           await nCategory.save();
         }
-
-    } if (action === 'splice') {
+    } else if (action === 'splice') {
         const index = tx.Categories.indexOf(category);
         if (index > -1) {
           // 2nd parameter means remove one item only

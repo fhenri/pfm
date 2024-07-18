@@ -7,10 +7,10 @@ export async function getAmountEUR (
     amount: number,
     transactionDate: Date): Promise<number> {
     try {
-        if (fromCurrency == 'EUR') {
+        const baseCurrency = 'EUR';
+        if (fromCurrency === baseCurrency) {
             return amount;
         }
-        const baseCurrency = 'EUR';
         const dbRate = await getDBRate(fromCurrency, baseCurrency, transactionDate);
         if (dbRate == 1) {
             const currencyApi = new CurrencyAPI(process.env.CURRENCY_API_KEY);
@@ -24,7 +24,7 @@ export async function getAmountEUR (
             }
             const apiRate = apiData.data[baseCurrency].value;
             await saveDBRate(fromCurrency, baseCurrency, transactionDate, apiRate);
-            return amount / apiRate;
+            return amount * apiRate;
         } else {
             console.log(`using db-rate: Rate: ${dbRate} and amount: ${amount}`);
             return amount * dbRate;

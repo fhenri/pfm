@@ -1,6 +1,5 @@
 "use server";
 
-import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
 import * as transactionService from '@/services/transaction-service';
 
