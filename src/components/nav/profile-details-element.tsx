@@ -9,10 +9,17 @@ import {
 
 import { useFormStatus, useFormState } from 'react-dom'
 import * as userAction from "@/actions/user-action";
+import { IProfile } from "@/types/tenancy";
 
-const ProfileAccountElement = ({profileName, account}) => {
+const initialState = {
+  message: '',
+}
+
+const ProfileAccountElement = (
+  {profileName, account} :
+  {profileName: string, account: string}) => {
     const [remAccountstate, formActionRemAccountProfile] =
-        useFormState(userAction.removeAccountToProfile, null)
+        useFormState(userAction.removeAccountToProfile, initialState)
 
     const removeAccountProfileClient = (event) => {
       event.preventDefault();
@@ -32,24 +39,21 @@ const ProfileAccountElement = ({profileName, account}) => {
     )
 }
 
-const ProfileDetailsElement = ({profile}) => {
+const ProfileDetailsElement = ({profile}:{profile: IProfile}) => {
 
-    const [deleteProfilestate, formActionDelProfile] = useFormState(userAction.deleteProfile, null)
-    const [addAccountstate, formActionAddAccountProfile] = useFormState(userAction.addAccountToProfile, null)
+    const [deleteProfilestate, formActionDelProfile] = useFormState(userAction.deleteProfile, initialState)
+    const [addAccountstate, formActionAddAccountProfile] = useFormState(userAction.addAccountToProfile, initialState)
 
     const deleteProfileClient = (event) => {
       event.preventDefault();
+      /*
+      const rawFormData = {
+        profileName: profile.name,
+      }
+      */
       let formData = new FormData();
       formData.append('profileName', profile.name);
       formActionDelProfile(formData);
-    }
-
-    const addAccountProfileClient = (event) => {
-      event.preventDefault();
-      let formData = new FormData();
-      formData.append('profileName', profile.name);
-      formData.append('accountId', event.target.accountId.value);
-      formActionAddAccountProfile(formData);
     }
 
     return (
@@ -60,9 +64,10 @@ const ProfileDetailsElement = ({profile}) => {
             { profile.accountList.map((account, index) => (
                 <ProfileAccountElement key={index} profileName={profile.name} account={account}/>
             ))}
-            <form onSubmit={addAccountProfileClient}>
+            <form action={formActionAddAccountProfile}>
             <div className="flex w-full max-w-sm items-center space-x-2 mt-4">
-              <Input id="accountId" type="text" placeholder="Enter account number" required/>
+              <input type="hidden" name="profileName" value={profile.name} />
+              <Input id="accountId" name="accountId" type="text" placeholder="Enter account number" required/>
               <Button variant="ghost" className="pl-0" type="submit"><PlusCircledIcon /></Button>
             </div>
             </form>

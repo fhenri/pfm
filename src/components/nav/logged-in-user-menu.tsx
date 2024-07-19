@@ -28,18 +28,25 @@ import MenuProfileList from "@/components/nav/profile-list-menu"
 
 import bankFileConfig from '@/config/parser-config.json';
 
-const MyLinkForPath = ({ path, children }) => {
+const navLinks = [
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/analysis", label: "Analysis" },
+    { href: "/banking", label: "Banking" },
+    { href: "/budget", label: "Budget" },
+]
+
+const MyLinkForPath = ({ path, onClick, children }) => {
     const pathname = usePathname();
 
     if (pathname === path) {
         return (
-            <Link href={path} aria-current="page"
-                  className="block py-2 px-3 md:p-0 text-slate-950 uppercase">
+            <span className="block py-2 px-3 md:p-0 text-slate-950 uppercase">
                 {children}
-            </Link>
+            </span>
     )} else {
         return (
             <Link href={path}
+                  onClick={onClick}
                   className="block py-2 px-3 md:p-0 text-gray-400 uppercase">
                 {children}
             </Link>
@@ -51,7 +58,11 @@ const LoggedInUserMenu = ({ user, serializedList, profileSelected }) => {
 //:{ user: Any, profileList:Any, profileSelected: string } => {
 
     const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false)
+    const [isMenuOpen, setIsMenuOpen] = useState(false); 
     const profileList = JSON.parse(serializedList);
+
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    const hiddenDropdown = isMenuOpen ? "" : "hidden";
 
     return (
     <>
@@ -93,27 +104,28 @@ const LoggedInUserMenu = ({ user, serializedList, profileSelected }) => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <button data-collapse-toggle="navbar-user" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
+        <Button 
+          data-collapse-toggle="navbar-user" 
+          variant="ghost"
+          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" 
+          aria-controls="navbar-user" 
+          aria-expanded={isMenuOpen}
+          onClick={toggleMenu}>
             <span className="sr-only">Open main menu</span>
             <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15"/>
             </svg>
-        </button>
+        </Button>
       </div>
-      <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+      <div className={`items-center justify-between ${hiddenDropdown} w-full md:flex md:w-auto md:order-1`} id="navbar-user">
         <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-          <li>
-            <MyLinkForPath path="/dashboard">Dashboard</MyLinkForPath>
-          </li>
-          <li>
-            <MyLinkForPath path="/analysis">Analysis</MyLinkForPath>
-          </li>
-          <li>
-            <MyLinkForPath path="/banking">Banking</MyLinkForPath>
-          </li>
-          <li>
-            <MyLinkForPath path="/budget">Budget</MyLinkForPath>
-          </li>
+          {navLinks.map((link) => (
+            <li key={link.href}>
+              <MyLinkForPath path={link.href} onClick={toggleMenu}>
+                {link.label}
+              </MyLinkForPath>
+            </li>
+          ))}
         </ul>
       </div>
     </>
