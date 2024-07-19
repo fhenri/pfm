@@ -2,7 +2,7 @@ import CategoryRule, { ICategoryRules } from '@/types/txRules';
 import Category, { ICategory } from '@/types/txCategory';
 
 const getCategoryForTransaction =
-async(description: string):Promise<ICategory[]> => {
+async(description: string):Promise<String[]> => {
     const categoryRules = await getCategoryRules();
     const rule = categoryRules.find((crule) => description.includes(crule._id));
     if (rule) {

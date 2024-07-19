@@ -2,7 +2,7 @@
 
 import { useFormStatus, useFormState } from 'react-dom'
 
-import { CirclePlus } from "lucide-react"
+import { PlusCircledIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -24,8 +24,11 @@ import {
 import ProfileDetailsElement from "./profile-details-element"
 
 import { addProfile } from "@/actions/user-action";
+import { IProfile } from '@/types/tenancy';
 
-const ProfileSettingsDialog = ({isOpen, callback, profileList}) => {
+const ProfileSettingsDialog = (
+  {isOpen, callback, profileList} :
+  {isOpen: boolean, callback: any, profileList: IProfile[]}) => {
 
   const [state, formActionAddProfile] = useFormState(addProfile, null)
 
@@ -38,12 +41,12 @@ const ProfileSettingsDialog = ({isOpen, callback, profileList}) => {
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={isOpen  && callback}>
+    <Dialog open={isOpen} onOpenChange={isOpen && callback}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Profile Settings Definition</DialogTitle>
+          <DialogTitle>Define Your Profile</DialogTitle>
           <DialogDescription>
-            Manage profile and bank account.
+            Manage profile and associate your bank accounts.
           </DialogDescription>
         </DialogHeader>
         <Tabs defaultValue="account" className="w-[500px]">
@@ -52,7 +55,7 @@ const ProfileSettingsDialog = ({isOpen, callback, profileList}) => {
             <TabsTrigger className="w-16" key={index} value={profile.name}>{profile.name}</TabsTrigger>
             ))}
             <TabsTrigger value="new">
-                <CirclePlus className="w-4"/><span className="ml-2">Add</span>
+                <PlusCircledIcon className="w-4"/><span className="ml-2">Add</span>
             </TabsTrigger>
           </TabsList>
           { profileList && profileList.map((profile, index) => (

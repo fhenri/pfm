@@ -47,7 +47,7 @@ export class ofxTransactionImportStrategy implements ITransactionImportStrategy 
 
     return { message: "OFX transactions imported successfully" };
   } catch (e) {
-      console.log(e);
+    console.log(e);
     return { message: "Failed to load file" };
   }
 }

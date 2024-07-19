@@ -1,19 +1,22 @@
 "use client"
 
-import { ChevronDown } from "lucide-react"
+import { ChevronDownIcon } from '@radix-ui/react-icons'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { DataTableFacetedFilter } from "./data-table-faceted-filter"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Table } from "@/components/ui/table"
+import { IAccount } from '@/types/bAccount'
+import { DateRangePicker } from '@/components/ui/custom/date-range-picker'
+import { DataTableFacetedFilter } from "./data-table-faceted-filter"
 
 interface DataTableToolbarProps<TData> {
-  table: Table<TData>
+  table: Table<TData>,
+  categoryList: string[],
+  accountList: IAccount[]
 }
 
 export function DataTableToolbar<TData>({
@@ -26,7 +29,7 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center space-x-2">
         <Input placeholder="Search transactions..."
                value={(table.getColumn("Description")?.getFilterValue() as string) ?? ""}
-               className="h-8 max-w-sm"
+               className="h-8 w-auto"
                onChange={(event) =>
                  table.getColumn("Description")?.setFilterValue(event.target.value)
                } />
@@ -34,26 +37,31 @@ export function DataTableToolbar<TData>({
           <DataTableFacetedFilter
             column={table.getColumn("AccountNumber")}
             title="Select Account"
-            options={accountList}
-          />
+            options={accountList} />
         )}
         {table.getColumn("Categories") && (
           <DataTableFacetedFilter
             column={table.getColumn("Categories")}
             title="Categories"
-            options={categoryList}
-          />
+            options={categoryList} />
         )}
         <datalist id="categories">
             {categoryList.map((category: string) => (
                 <option key={category} value={category} />
             ))}
         </datalist>
+        {table.getColumn("TransactionDate") && (
+          <DateRangePicker
+            triggerSize="sm"
+            triggerClassName="ml-auto w-52"
+            align="end"
+            column={table.getColumn("TransactionDate")} />
+        )}
       </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="h-8 ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+              Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

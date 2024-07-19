@@ -1,5 +1,6 @@
 "use client";
 
+//import { FilePlusIcon, UploadIcon } from "@radix-ui/react-icons"
 import { FileUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,7 +13,12 @@ import {
 } from "@/components/ui/dialog"
 import FileImportForm from "./file-import-form";
 
-const FileImportDialog = (props) => {
+import React from 'react';
+
+type FileImportDialogProps = {
+};
+
+const FileImportDialog: React.FC<FileImportDialogProps> = (props) => {
 
   return (
     <Dialog>

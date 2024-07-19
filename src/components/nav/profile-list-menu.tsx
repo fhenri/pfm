@@ -1,6 +1,6 @@
 "use client";
 
-import { Settings, LogOut } from "lucide-react"
+import { GearIcon } from "@radix-ui/react-icons"
 import {
   DropdownMenuItem,
   DropdownMenuRadioGroup,
@@ -9,15 +9,18 @@ import {
 
 import { useFormStatus, useFormState } from 'react-dom'
 import { setUserProfileForm } from "@/actions/user-action";
+import { IProfile } from "@/types/tenancy";
 
-const MenuProfileList = ({profileList, profileSelected, onSelectItem}) => {
+const MenuProfileList = (
+  {profileList, profileSelected, onSelectItem} :
+  {profileList: IProfile[], profileSelected: string, onSelectItem: (event: Event) => void}) => {
 
   const [state, userAction] = useFormState(setUserProfileForm, null)
 
   return (
     <>
     <DropdownMenuItem onSelect={onSelectItem}>
-        <Settings className="mr-2 h-4 w-4" />
+        <GearIcon className="mr-2 h-4 w-4" />
         <span>Profile Settings</span>
     </DropdownMenuItem>
     <DropdownMenuRadioGroup value={profileSelected} onValueChange={userAction}>

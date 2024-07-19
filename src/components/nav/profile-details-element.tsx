@@ -1,6 +1,6 @@
 "use client";
 
-import { CirclePlus, CircleX } from "lucide-react"
+import { PlusCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -25,7 +25,7 @@ const ProfileAccountElement = ({profileName, account}) => {
     return (
         <>
         <div className="flex w-full max-w-sm items-center text-sm">
-          <CircleX className="w-4 mr-2" onClick={removeAccountProfileClient}/>
+          <CrossCircledIcon className="w-3 mr-2 text-red-800 cursor-pointer" onClick={removeAccountProfileClient}/>
           {account}
         </div>
         </>
@@ -54,18 +54,18 @@ const ProfileDetailsElement = ({profile}) => {
 
     return (
         <TabsContent value={profile.name}>
-          Accounts available:
-          <ul>
+          <span className="text-sm text-muted-foreground">
+            Accounts available:
+          </span>
             { profile.accountList.map((account, index) => (
                 <ProfileAccountElement key={index} profileName={profile.name} account={account}/>
             ))}
             <form onSubmit={addAccountProfileClient}>
-            <div className="flex w-full max-w-sm items-center space-x-1 mt-4">
+            <div className="flex w-full max-w-sm items-center space-x-2 mt-4">
               <Input id="accountId" type="text" placeholder="Enter account number" required/>
-              <Button variant="ghost" className="pl-0" type="submit"><CirclePlus /></Button>
+              <Button variant="ghost" className="pl-0" type="submit"><PlusCircledIcon /></Button>
             </div>
             </form>
-          </ul>
           <Button className="mt-4" variant="secondary" onClick={deleteProfileClient}>Delete Profile</Button>
         </TabsContent>
     )

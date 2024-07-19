@@ -4,18 +4,9 @@ import { useState } from "react"
 import Link from "next/link";
 import { usePathname } from 'next/navigation'
 
-import { LogOut } from "lucide-react"
+import { ExitIcon } from "@radix-ui/react-icons"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -96,7 +87,7 @@ const LoggedInUserMenu = ({ user, serializedList, profileSelected }) => {
             <DropdownMenuItem asChild>
                 {/* we need to use a on server as Link will fetch and return error */}
                 <a href="/api/auth/logout">
-                    <LogOut className="mr-2 h-4 w-4" />
+                    <ExitIcon className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                 </a>
             </DropdownMenuItem>

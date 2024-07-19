@@ -54,7 +54,7 @@ const createTransaction = async(
 return tx;
 }
 
-const updateCategory = async(id: string, action: string, category: string) : Promise<void> => {
+const updateCategory = async(id: string, action: string, category: string) : Promise<{ message: string }> => {
     let tx = await bTransaction.findById(id);
     if (tx === null) {
       return { message: "Failed to load transaction" };
@@ -77,6 +77,7 @@ const updateCategory = async(id: string, action: string, category: string) : Pro
           });
           await nCategory.save();
         }
+        return { message: "category added and transaction updated" };
     } else if (action === 'splice') {
         const index = tx.Categories.indexOf(category);
         if (index > -1) {
@@ -84,16 +85,19 @@ const updateCategory = async(id: string, action: string, category: string) : Pro
           tx.Categories.splice(index, 1);
           tx.save();
         }
+        return { message: "category removed and transaction updated" };
     }
+    return { message: "no action provided" };
 }
 
-const updateComment = async(id: string, comment: string) : Promise<void> => {
+const updateComment = async(id: string, comment: string) : Promise<{ message: string }> => {
     let tx = await bTransaction.findById(id);
     if (tx === null) {
       return { message: "Failed to load transaction" };
     }
     tx.Comment = comment;
     tx.save();
+    return { message: "comment updated and transaction updated" };
 }
 
 export {

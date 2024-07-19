@@ -47,7 +47,7 @@ const FileImportForm = (props) => {
       return selectItems;
     }
 
-    const fileTypeChanged = (itemSelected) => {
+    const fileTypeChanged = (itemSelected: string) => {
       const fileTypeSelected = fileList[itemSelected]
       setExtensionAccepted(`.${fileTypeSelected.file}`);
     }

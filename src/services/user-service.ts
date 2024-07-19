@@ -1,7 +1,7 @@
 "use server";
 
 import { getSession } from '@auth0/nextjs-auth0';
-import User from '@/types/tenancy';
+import User, {IUser, IProfile} from '@/types/tenancy';
 import { kv } from "@vercel/kv";
 
 export async function getMyUser() {
@@ -11,11 +11,11 @@ export async function getMyUser() {
     const auth0User = session.user;
     const dbUser = await User.findOne({ name: auth0User.name}).exec();
 
-    if (!dbUser) return { ...auth0User, profile: [] };
-    else return { ...auth0User, profile: dbUser.profileList };
+    if (!dbUser) return { ...auth0User, profileList: [] };
+    else return { ...auth0User, profileList: dbUser.profileList };
 }
 
-export async function setUserProfile(user, profile: string) {
+export async function setUserProfile(user: IUser, profile: string) {
     await kv.set(user.name, profile);
 }
 
@@ -28,28 +28,28 @@ export async function getCurrentUserProfile(user) {
     }
 }
 
-export async function getUserAvailableProfile(user) {
-    const dbUser = await User.findOne({ name: user.name}) as User;
+export async function getUserAvailableProfile(user: IUser) {
+    const dbUser = await User.findOne({ name: user.name});
     if (dbUser === null) return null;
     return dbUser.profileList;
 }
 
-export async function getCurrentAccountList(user) {
+export async function getCurrentAccountList(user: IUser) {
     const currentProfileName = await getCurrentUserProfile(user);
     if (!currentProfileName) return null;
-    const currentProfile = user.profile?.find(p => p.name === currentProfileName);
+    const currentProfile = user.profileList?.find(p => p.name === currentProfileName);
     if (!currentProfile) return null;
     return currentProfile.accountList;
 }
 
-export async function addSvcProfile(user, profile: string) {
+export async function addSvcProfile(user: IUser, profile: string) {
     if (!profile) {
         console.error("Profile name is required.");
         return;
     }
 
     try {
-        let dbUser: User = await User.findOne({ name: user.name });
+        let dbUser: IUser | null = await User.findOne({ name: user.name });
         if (!dbUser) {
             // this is only case where we'll create the user
             console.error("User not found - creating");
@@ -64,7 +64,7 @@ export async function addSvcProfile(user, profile: string) {
             return;
         }
 
-        const profileObject = { name: profile, profileList: [] };
+        const profileObject: IProfile = { name: profile, accountList: [] };
         dbUser.profileList.push(profileObject);
         await dbUser.save();
     } catch (error) {
@@ -72,21 +72,21 @@ export async function addSvcProfile(user, profile: string) {
     }
 }
 
-export async function delSvcProfile(user, profile: string) {
+export async function delSvcProfile(user: typeof User, profile: string) {
     if (!profile) {
         console.error("Profile name is required.");
         return;
     }
 
     try {
-        const dbUser: User = await User.findOne({ name: user.name });
+        const dbUser: IUser | null = await User.findOne({ name: user.name });
         if (!dbUser) {
             console.error("User not found.");
             return;
         }
 
         // Find the index of the profile to be deleted
-        const profileIndex = dbUser.profileList.findIndex(p => p.name === profile);
+        const profileIndex = dbUser.profileList.findIndex((p: IProfile) => p.name === profile);
         if (profileIndex === -1) {
             console.error(`Profile with name ${profile} does not exist.`);
             return;
@@ -102,28 +102,33 @@ export async function delSvcProfile(user, profile: string) {
     }
 }
 
-export async function addSvcAccountToProfile(user, profile: string, accountId: string) {
+export async function addSvcAccountToProfile(user: typeof User, profile: string, accountId: string) {
     if (!profile) {
         console.error("Profile name is required.");
         return;
     }
 
     try {
-        const dbUser: User = await User.findOne({ name: user.name });
+        const dbUser: IUser | null = await User.findOne({ name: user.name });
         if (!dbUser) {
             console.error("User not found.");
             return;
         }
 
-        // Find the index of the profile to be updated
-        const profileIndex = dbUser.profileList.findIndex(p => p.name === profile);
+        // Find the index of the profile to be deleted
+        const profileIndex = dbUser.profileList.findIndex((p: IProfile) => p.name === profile);
         if (profileIndex === -1) {
             console.error(`Profile with name ${profile} does not exist.`);
             return;
         }
 
-        // add AccountId to the profile
-        dbUser.profileList[profileIndex].accountList.push(accountId);
+        // add AccountId to the profile if it does not exists
+        if (dbUser.profileList[profileIndex].accountList.includes(accountId)) {
+            console.error(`Account ${accountId} already exists.`);
+            return;
+        } else {
+            dbUser.profileList[profileIndex].accountList.push(accountId);
+        }
 
         // Save the updated user back to the database
         await dbUser.save();
@@ -131,14 +136,14 @@ export async function addSvcAccountToProfile(user, profile: string, accountId: s
         console.error("Error adding profile to user:", error);
     }
 }
-export async function remSvcAccountToProfile(user, profile: string, accountId: string) {
+export async function remSvcAccountToProfile(user: typeof User, profile: string, accountId: string) {
     if (!profile) {
         console.error("Profile name is required.");
         return;
     }
 
     try {
-        const dbUser: User = await User.findOne({ name: user.name });
+        const dbUser: IUser | null = await User.findOne({ name: user.name });
         if (!dbUser) {
             console.error("User not found.");
             return;
@@ -152,7 +157,7 @@ export async function remSvcAccountToProfile(user, profile: string, accountId: s
         }
 
         // search AccountId from the profile
-        const accountIndex = dbUser.profileList[profileIndex].accountList.findIndex(a => a === accountId);
+        const accountIndex = dbUser.profileList[profileIndex].accountList.findIndex((a: string) => a === accountId);
         if (profileIndex === -1) {
             console.error(`Account ${accountId} does not exist.`);
             return;

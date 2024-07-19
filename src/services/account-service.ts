@@ -19,7 +19,7 @@ const getAccountFromList = async(currentList:[string]):Promise<IAccount[]> => {
     }
 }
 
-const updateDescription = async(id: string, description: string) : Promise<void> => {
+const updateDescription = async(id: string, description: string): Promise<{ message: string }> => {
     let account = await bAccount.findById(id);
     if (account === null) {
       return { message: "Failed to load account" };
@@ -27,6 +27,7 @@ const updateDescription = async(id: string, description: string) : Promise<void>
 
     account.description = description;
     await account.save();
+    return { message: "account updated" };
 }
 
 const createAccount = async(

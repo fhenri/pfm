@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 import { Column } from "@tanstack/react-table";
 import { ITransaction } from '@/types/bTransaction';
 import { IAccount, instanceOfAccount } from '@/types/bAccount';
-import { Check, PlusCircle } from "lucide-react";
+import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,74 +24,73 @@ import {
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
 
-
 const OptionsCommand = ({ options, selectedValues, column, facets }) => {
 
     if (options && options.length > 0 && options[0] instanceof Object) {
         return(options.map((option) => {
-                   const isSelected = selectedValues.has(option.accountNumber)
-                   return (
-                     <CommandItem
-                       key={option.accountNumber}
-                       onSelect={() => {
-                         if (isSelected) {
-                           selectedValues.delete(option.accountNumber)
-                         } else {
-                           selectedValues.add(option.accountNumber)
-                         }
-                         const filterValues = Array.from(selectedValues)
-                         column?.setFilterValue(
-                           filterValues.length ? filterValues : undefined
-                         )
-                       }}>
-                       <div className={cn("mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                               isSelected
-                                 ? "bg-primary text-primary-foreground"
-                                 : "opacity-50 [&_svg]:invisible")}>
-                         <Check className={cn("h-4 w-4")} />
-                       </div>
-                       <span>{option.bankName} - {option.accountNumber} ({option.currency})</span>
-                       {facets?.get(option.accountNumber) && (
-                         <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                           {facets.get(option.accountNumber)}
-                         </span>
-                       )}
-                     </CommandItem>
-                   )
-                 })
+            const isSelected = selectedValues.has(option.accountNumber)
+            return (
+              <CommandItem
+                key={option.accountNumber}
+                onSelect={() => {
+                  if (isSelected) {
+                    selectedValues.delete(option.accountNumber)
+                  } else {
+                    selectedValues.add(option.accountNumber)
+                  }
+                  const filterValues = Array.from(selectedValues)
+                  column?.setFilterValue(
+                    filterValues.length ? filterValues : undefined
+                  )
+                }}>
+                <div className={cn("mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                        isSelected
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible")}>
+                  <CheckIcon className={cn("h-4 w-4")} />
+                </div>
+                <span>{option.bankName} - {option.accountNumber} ({option.currency})</span>
+                {facets?.get(option.accountNumber) && (
+                  <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                    {facets.get(option.accountNumber)}
+                  </span>
+                )}
+              </CommandItem>
+            )
+          })
         )
     } else {
         return(options.map((option) => {
-                   const isSelected = selectedValues.has(option)
-                   return (
-                     <CommandItem
-                       key={option}
-                       onSelect={() => {
-                         if (isSelected) {
-                           selectedValues.delete(option)
-                         } else {
-                           selectedValues.add(option)
-                         }
-                         const filterValues = Array.from(selectedValues)
-                         column?.setFilterValue(
-                           filterValues.length ? filterValues : undefined
-                         )
-                       }}>
-                       <div className={cn("mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                               isSelected
-                                 ? "bg-primary text-primary-foreground"
-                                 : "opacity-50 [&_svg]:invisible")}>
-                         <Check className={cn("h-4 w-4")} />
-                       </div>
-                       <span>{option}</span>
-                       {facets?.get(option) && (
-                         <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                           {facets.get(option)}
-                         </span>
-                       )}
-                     </CommandItem>
-                   )
-                 })
+               const isSelected = selectedValues.has(option)
+               return (
+                 <CommandItem
+                   key={option}
+                   onSelect={() => {
+                     if (isSelected) {
+                       selectedValues.delete(option)
+                     } else {
+                       selectedValues.add(option)
+                     }
+                     const filterValues = Array.from(selectedValues)
+                     column?.setFilterValue(
+                       filterValues.length ? filterValues : undefined
+                     )
+                   }}>
+                   <div className={cn("mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                           isSelected
+                             ? "bg-primary text-primary-foreground"
+                             : "opacity-50 [&_svg]:invisible")}>
+                     <CheckIcon className={cn("h-4 w-4")} />
+                   </div>
+                   <span>{option}</span>
+                   {facets?.get(option) && (
+                     <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                       {facets.get(option)}
+                     </span>
+                   )}
+                 </CommandItem>
+               )
+             })
         )
     }
 }
@@ -132,8 +131,8 @@ export function DataTableFacetedFilter({
   title: string;
   options: string[] | IAccount[];
 }) {
-  const facets = column?.getFacetedUniqueValues()
-  const selectedValues = new Set(column?.getFilterValue())
+  const facets = column?.getFacetedUniqueValues();
+  const selectedValues = new Set(column?.getFilterValue());
 
   let popClassWidth = "w-[200px] p-0"
   if (options && options.length > 0 && options[0] instanceof Object) {
@@ -144,23 +143,21 @@ export function DataTableFacetedFilter({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <PlusCircle className="mr-2 h-4 w-4" />
+          <PlusCircledIcon className="mr-2 h-4 w-4" />
           {title}
           {selectedValues?.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
               <Badge
                 variant="secondary"
-                className="rounded-sm px-1 font-normal lg:hidden"
-              >
+                className="rounded-sm px-1 font-normal lg:hidden">
                 {selectedValues.size}
               </Badge>
               <div className="hidden space-x-1 xl:flex">
                 {selectedValues.size > 2 ? (
                   <Badge
                     variant="secondary"
-                    className="rounded-sm px-1 font-normal"
-                  >
+                    className="rounded-sm px-1 font-normal">
                     {selectedValues.size} selected
                   </Badge>
                 ) : (

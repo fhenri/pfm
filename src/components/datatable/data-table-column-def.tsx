@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowUpDown } from "lucide-react"
+import { CaretSortIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { ITransaction } from '@/types/bTransaction';
@@ -35,7 +35,7 @@ export const DataTableColumns: ColumnDef<ITransaction>[] = [
         <Button variant="ghost"
           className="p-0 h-4 text-xs"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          <ArrowUpDown className="mr-2 h-4 w-4" />
+          <CaretSortIcon className="mr-2 h-4 w-4" />
           <span className="uppercase font-bold">Date</span>
         </Button>
       )},
@@ -43,6 +43,14 @@ export const DataTableColumns: ColumnDef<ITransaction>[] = [
       return (
           <div>{(new Date(row.getValue("TransactionDate"))).toLocaleDateString('fr-FR')}</div>
       )},
+    filterFn: (row, id, value) => {
+      const thisDate = new Date(row.getValue(id));
+      if ((value.from && value.from > thisDate)
+        ||(value.to && value.to < thisDate)) {
+        return false
+      };
+      return true;
+    },
   },
   {
     accessorKey: "Description",
@@ -68,7 +76,7 @@ export const DataTableColumns: ColumnDef<ITransaction>[] = [
             <Button variant="ghost"
               className="p-0 h-4 text-xs"
               onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-              <ArrowUpDown className="mr-2 h-4 w-4" />
+              <CaretSortIcon className="mr-2 h-4 w-4" />
               <span className="uppercase font-bold">Amount</span>
             </Button>
         </div>
@@ -89,7 +97,7 @@ export const DataTableColumns: ColumnDef<ITransaction>[] = [
             <Button variant="ghost"
               className="p-0 h-4 text-xs"
               onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-              <ArrowUpDown className="mr-2 h-4 w-4" />
+              <CaretSortIcon className="mr-2 h-4 w-4" />
               <span className="uppercase font-bold">Amount (€)</span>
             </Button>
         </div>

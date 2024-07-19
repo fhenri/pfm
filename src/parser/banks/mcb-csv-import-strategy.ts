@@ -16,16 +16,16 @@ export class mcbcsvTransactionImportStrategy implements ITransactionImportStrate
 
     private async importCSVData(results: string[][]): Promise<void> {
         console.log("import csv results");
-        let accountNumber: string;
-        let accountCurrency : string;
+        let accountNumber: string | undefined;
+        let accountCurrency : string | undefined;
         for (const result in results) {
             switch (result) {
                 case "0":
                     //accountNumber= this.parseResult(result, "Account Number ");
-                    accountNumber = results[result][0].match(/Account Number (\d+)/i)[1];
+                    accountNumber = results[result][0]?.match(/Account Number (\d+)/i)?.[1];
                     break;
                 case "1":
-                    accountCurrency = results[result][0].match(/Account Currency (\w+)/i)[1];
+                    accountCurrency = results[result][0].match(/Account Currency (\w+)/i)?.[1];
                     break;
                 case "2":
                 case "3":
@@ -34,8 +34,8 @@ export class mcbcsvTransactionImportStrategy implements ITransactionImportStrate
                     break;
                 default:
                     const transactionId = results[result][2];
-                    const MoneyOut = results[result][4].replace(',', '');
-                    const MoneyIn = results[result][5].replace(',', '');
+                    const MoneyOut = Number(results[result][4].replace(',', ''));
+                    const MoneyIn = Number(results[result][5].replace(',', ''));
                     const amount = MoneyIn > 0 ? MoneyIn : -MoneyOut;
                     const transactionDate = new Date(results[result][0]);
                     transactionService.createTransaction(
@@ -43,7 +43,7 @@ export class mcbcsvTransactionImportStrategy implements ITransactionImportStrate
                         accountNumber,
                         accountCurrency,
                         transactionDate,
-                        Date.parse(results[result][1]) as Date,
+                        new Date(results[result][1]),
                         results[result][3],
                         MoneyOut,
                         MoneyIn,

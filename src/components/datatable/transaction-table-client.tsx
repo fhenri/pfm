@@ -2,7 +2,6 @@
 
 import { createContext, useState } from "react"
 import {
-  ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
@@ -10,13 +9,12 @@ import {
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
+  getFacetedMinMaxValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -48,7 +46,7 @@ export const CategoryContext = createContext<CategoryContextType>(defaultContext
 
 const TransactionTableClient = (
     { accounts, transactions, categories }:
-    { accounts: IAccount[], transactions: ITransaction[] | null, categories: ICategory[] }) => {
+    { accounts: IAccount[], transactions: ITransaction[], categories: ICategory[] }) => {
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -70,6 +68,7 @@ const TransactionTableClient = (
     columnResizeDirection: 'ltr',
     getCoreRowModel: getCoreRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
+    //getFacetedMinMaxValues: getFacetedMinMaxValues(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
