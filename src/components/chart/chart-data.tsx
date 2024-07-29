@@ -2,52 +2,86 @@
 
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { 
   ChartConfig, 
   ChartContainer,
   ChartTooltip, 
   ChartTooltipContent } from "@/components/ui/chart"
 
-const chartData = [
-  { month: "January", income: 186, outcome: 80 },
-  { month: "February", income: 305, outcome: 200 },
-  { month: "March", income: 237, outcome: 120 },
-  { month: "April", income: 73, outcome: 190 },
-  { month: "May", income: 209, outcome: 130 },
-  { month: "June", income: 214, outcome: 140 },
-]
-
 const chartConfig = {
   income: {
-    label: "Revenue",
-    color: "#2563eb",
+    label: "Income (€): ",
+    //color: "#84cc16",
+    color: 'hsl(var(--chart-2))',
   },
   outcome: {
-    label: "Spend",
-    color: "#60a5fa",
+    label: "Outcome (€): ",
+    //color: "#dc2626",
+    color: 'hsl(var(--chart-1))',
   },
 } satisfies ChartConfig
 
 const ChartSample = ({ txList } : { txList: ITransaction[] }) => {
 
+  const data = txList.reduce((acc, transaction) => {
+    const transactionDate = new Date(transaction.TransactionDate);
+    const month: string = transactionDate.getFullYear().toString() 
+              + (transactionDate.getMonth() + 1).toString().padStart(2, '0');
+
+    // Find the existing entry for this month
+    let entry = acc.find(item => item.month === month);
+  
+    // If no entry exists for this month, create a new one
+    if (!entry) {
+      entry = { month: month, income: 0, outcome: 0 };
+      acc.push(entry);
+    }
+  
+    // Add to income or outcome based on the Amount
+    if (transaction.Amount > 0) {
+      entry.income += transaction.AmountEUR;
+    } else if (transaction.Amount < 0) {
+      entry.outcome += -transaction.AmountEUR;
+    }
+  
+    return acc;
+  }, []);
+  
   return (
-    <ChartContainer 
-        config={chartConfig} 
-        className="min-h-[350px] w-1/2 border-2 rounded basis-1/2 grow">
-      <BarChart accessibilityLayer data={chartData}>
-        <CartesianGrid vertical={false} />
-        <XAxis
-          dataKey="month"
-          tickLine={false}
-          tickMargin={10}
-          axisLine={false}
-          tickFormatter={(value) => value.slice(0, 3)}
-        />
-        <Bar dataKey="income" fill="var(--color-income)" radius={4} />
-        <Bar dataKey="outcome" fill="var(--color-outcome)" radius={4} />
-      </BarChart>
-    </ChartContainer>
-  )
+    <Card className="border-2 rounded basis-1/2 grow">
+      <CardHeader>
+        <CardTitle>Account PNL (per month)</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer 
+            config={chartConfig} 
+            className="min-h-[350px] w-full">
+          <BarChart accessibilityLayer data={data}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent indicator="dashed" />}
+            />
+            <Bar dataKey="income" fill="var(--color-income)" radius={4} />
+            <Bar dataKey="outcome" fill="var(--color-outcome)" radius={4} />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
+    )
 }
 
 export default ChartSample;

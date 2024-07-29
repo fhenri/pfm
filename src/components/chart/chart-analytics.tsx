@@ -3,12 +3,14 @@
 import React, { useEffect, useState } from "react";
 
 import {
-  LineChart,
+  CartesianGrid,
+  Legend,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  ResponsiveContainer,
 } from 'recharts';
 import {
   Card,
@@ -17,6 +19,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 import {
   Select,
   SelectContent,
@@ -100,13 +106,14 @@ const AnalyticsChart = ({ txList, categories } : { txList: ITransaction[], categ
           <div style={{ width: '100%', height: 300 }}>
             <ResponsiveContainer>
               <LineChart width={1100} height={300} data={data}>
-                <Line 
-                    type='monotone' 
-                    dataKey={selectCategory} 
-                    stroke='#8884d8' />
-                <CartesianGrid stroke='#ccc' />
+                <Line type='monotone' 
+                      dataKey={selectCategory} 
+                      stroke='#8884d8' />
+                <CartesianGrid stroke='#ccc' vertical={false} />
                 <XAxis dataKey='month' />
                 <YAxis />
+                <Tooltip />
+                <Legend />
               </LineChart>
             </ResponsiveContainer>
           </div>

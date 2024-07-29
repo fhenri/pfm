@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { TrendingUp } from "lucide-react"
 import { Label, Pie, PieChart } from "recharts"
 
 import {
@@ -49,16 +48,14 @@ const ChartPie = ({ txList } : { txList: ITransaction[] }) => {
   }, { income: 0, outcome: 0 });
   
   const formattedResult = [
-    { type: 'income', amount: data.income, fill: "var(--color-income)" },
-    { type: 'outcome', amount: data.outcome, fill: "var(--color-outcome)" }
+    { type: 'income', amount: data.income, fill: 'hsl(var(--chart-2))' },
+    { type: 'outcome', amount: data.outcome, fill: 'hsl(var(--chart-1))' }
   ];
-  
-  console.log(formattedResult);
   
   return (
     <Card className="flex flex-col border-2 rounded basis-1/3">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Account PNL</CardTitle>
+        <CardTitle>Account PNL (Global)</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
