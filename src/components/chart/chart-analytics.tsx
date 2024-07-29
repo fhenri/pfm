@@ -41,9 +41,12 @@ const AnalyticsChart = ({ txList, categories } : { txList: ITransaction[], categ
   useEffect(() => {
     const data = txList.reduce((acc: { [key: string]: any }, transaction) => {
       const transactionDate = new Date(transaction.TransactionDate);
-      const month = transactionDate.toLocaleString('default', { month: 'long' }) as string;
+      const month: string = transactionDate.getFullYear().toString() 
+                + (transactionDate.getMonth() + 1).toString().padStart(2, '0');
       const categories = transaction.Categories;
-      const amount = transaction.AmountEUR;
+      const amount = transaction.AmountEUR > 0 ? 
+                transaction.AmountEUR : 
+                -transaction.AmountEUR;
     
       // Ensure an entry exists for the month
       if (!acc[month]) {
