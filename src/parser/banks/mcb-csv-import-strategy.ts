@@ -6,7 +6,8 @@ import * as accountService from '@/services/account-service';
 import * as transactionService from '@/services/transaction-service';
 import { ITransactionImportStrategy } from "@/parser/import-strategy";
 
-export class mcbcsvTransactionImportStrategy implements ITransactionImportStrategy {
+export class mcbcsvTransactionImportStrategy 
+implements ITransactionImportStrategy {
 
     private bankConfig: any;
 

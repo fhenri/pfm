@@ -19,6 +19,15 @@ const getAccountFromList = async(currentList:[string]):Promise<IAccount[]> => {
     }
 }
 
+const getAccountFromNumber = async(accountNumber:string) : Promise<IAccount | null> => {
+    try {
+        return await bAccount.findOne({ accountNumber: accountNumber });
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
+}
+
 const updateDescription = async(id: string, description: string): Promise<{ message: string }> => {
     let account = await bAccount.findById(id);
     if (account === null) {
@@ -59,6 +68,7 @@ const createAccount = async(
 
 export {
     createAccount,
+    getAccountFromNumber,
     getAccountList,
     getAccountFromList,
     updateDescription,

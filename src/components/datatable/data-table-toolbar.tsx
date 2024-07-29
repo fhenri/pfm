@@ -55,7 +55,7 @@ export function DataTableToolbar<TData>({
             triggerSize="sm"
             triggerClassName="ml-auto w-52"
             align="end"
-            column={table.getColumn("TransactionDate")} />
+            callback={(range: any) => table.getColumn("TransactionDate")?.setFilterValue(range)} />
         )}
       </div>
         <DropdownMenu>

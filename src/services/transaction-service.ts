@@ -20,6 +20,60 @@ const getTransactionList = async(currentAccountList: string[]) : Promise<ITransa
     }
 }
 
+const findTransactionAccountsList = async (accountList, dateFrom, dateTo) :
+Promise<ITransaction[]> => {
+    let queryFilter = {
+      AccountNumber: { $in: accountList },
+    };
+
+    let transactionDateFilter = {};
+    if (dateFrom) {
+        transactionDateFilter['$gte'] = new Date(dateFrom)
+        queryFilter['TransactionDate'] = transactionDateFilter;
+    }
+    if (dateTo) {
+        transactionDateFilter['$lte'] = new Date(dateTo)
+        queryFilter['TransactionDate'] = transactionDateFilter;
+    }
+
+    try {
+        const txList = await bTransaction
+        .find(queryFilter)
+        .sort({
+            TransactionDate: "desc",
+        });
+        return txList;
+    } catch (e) {
+        console.error(e);
+        return [];
+    }
+}
+
+const findTransactionAccountList = async (accountId, dateFrom, dateTo) :
+Promise<ITransaction[]> => {
+    let transactionDateFilter = {};
+    let queryFilter = {'AccountNumber': accountId};
+    if (dateFrom) {
+        transactionDateFilter['$gte'] = new Date(dateFrom)
+        queryFilter['TransactionDate'] = transactionDateFilter;
+    }
+    if (dateTo) {
+        transactionDateFilter['$lte'] = new Date(dateTo)
+        queryFilter['TransactionDate'] = transactionDateFilter;
+    }
+    try {
+        const txList = await bTransaction
+        .find(queryFilter)
+        .sort({
+            TransactionDate: "desc",
+        });
+        return txList;
+    } catch (e) {
+        console.error(e);
+        return [];
+    }
+}
+
 const createTransaction = async(
     transactionId: string,
     AccountNumber: string,
@@ -103,6 +157,8 @@ const updateComment = async(id: string, comment: string) : Promise<{ message: st
 export {
     createTransaction,
     getTransactionList,
+    findTransactionAccountsList,
+    findTransactionAccountList,
     updateCategory,
     updateComment,
 }

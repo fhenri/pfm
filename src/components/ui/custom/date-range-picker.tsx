@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { CalendarIcon } from "@radix-ui/react-icons"
-import { addDays, format } from "date-fns"
+import { format } from "date-fns"
 import type { DateRange } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
@@ -60,7 +60,7 @@ interface DateRangePickerProps
    */
   triggerClassName?: string
 
-  column?: any
+  callback?: any
 }
 
 export function DateRangePicker({
@@ -70,19 +70,19 @@ export function DateRangePicker({
   triggerSize = "default",
   triggerClassName,
   className,
-  column,
+  callback,
   ...props
 }: DateRangePickerProps) {
   
   const [date, setDate] = React.useState<DateRange | undefined>()
 
-  const filterDate = (selected: DateRange) => {
-    column?.setFilterValue(selected);
-    setDate(selected);
+  const filterDate = (range: DateRange) => {
+    callback(range)
+    setDate(range);
   }
 
-  const noFilterDate = (selected: DateRange) => {
-    column?.setFilterValue(undefined);
+  const noFilterDate = () => {
+    callback(undefined);
     setDate({});
   }
 
@@ -119,12 +119,13 @@ export function DateRangePicker({
         <PopoverContent className={cn("w-auto p-0", className)} {...props}>
           <Calendar
             initialFocus
+            hideNavigation
             mode="range"
             defaultMonth={date?.from}
             selected={date}
             onSelect={filterDate}
             numberOfMonths={2} />
-          <Button className="mb-2 mx-4 w-[calc(100%-2rem)]" variant={buttonVariant} onClick={noFilterDate}>Reset Date Filter</Button>
+        { date && <Button className="mb-2 mx-4 w-[calc(100%-2rem)]" variant={buttonVariant} onClick={noFilterDate}>Reset Date Filter</Button> }
         </PopoverContent>
       </Popover>
     </div>

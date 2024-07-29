@@ -95,7 +95,10 @@ const TransactionTableClient = (
 
   return (
     <div className="w-full space-y-4">
-      <DataTableToolbar table={table} categoryList={categoryList} accountList={accounts}/>
+      <DataTableToolbar 
+        table={table} 
+        categoryList={categoryList} 
+        accountList={accounts} />
       <div className="rounded-md border">
         <Table className="text-xs leading-3">
           <TableHeader className="">

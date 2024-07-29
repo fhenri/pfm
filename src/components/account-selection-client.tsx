@@ -10,11 +10,80 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-import { useRouter } from 'next/navigation';
-import { useState } from "react";
+import React, { useState } from "react";
 import { useFormStatus, useFormState } from 'react-dom'
+import { format } from "date-fns"
 import { setFormAccount } from "@/actions/account-action";
 import { IAccount } from '@/types/bAccount';
+import { ITransaction } from '@/types/bTransaction';
+import { DateRangePicker } from '@/components/ui/custom/date-range-picker';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+
+const AccountSelectionClient = ({ account, accounts, transactions }:
+    { account: IAccount, accounts: IAccount[], transactions: ITransaction[] }) => {
+
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const { replace } = useRouter();
+
+    const accountChange = (event: string) => {
+        const params = new URLSearchParams(searchParams);
+        if (event) {
+          params.set('accountId', event);
+        } else {
+          params.delete('accountId');
+        }
+        replace(`${pathname}?${params.toString()}`)
+    }
+
+    const dateChange = (range: any) => {
+        const params = new URLSearchParams(searchParams);
+
+        let fromDay: Date | undefined
+        let toDay: Date | undefined
+
+        if (range?.from) {
+          params.set("dateFrom", format(range.from, "yyyy-MM-dd"))
+        } else {
+          params.delete("dateFrom")
+        }
+
+        if (range?.to) {
+          params.set("dateTo", format(range.to, "yyyy-MM-dd"))
+        } else {
+          params.delete("dateTo")
+        }
+
+        replace(`${pathname}?${params.toString()}`, {
+          scroll: false,
+        })
+    }
+
+    return (
+    <header className="flex flex-wrap w-full justify-center my-5 space-x-5">
+        <Select onValueChange={accountChange} defaultValue={account ? account.accountNumber : ''}>
+          <SelectTrigger className="w-96 h-8">
+            <SelectValue placeholder="Select Account" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value=""> -- All Account -- </SelectItem>
+              {accounts.map((account) => (
+                <SelectItem key={account._id} value={account.accountNumber}>
+                  {account.bankName} - {account.accountNumber} ({account.currency})
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <DateRangePicker
+              triggerSize="sm"
+              triggerClassName="ml-auto w-52"
+              align="end"
+              callback={dateChange} />
+    </header>
+    )
+}
 
 const AccountDetails = ({ account }: { account: IAccount }) => {
 
@@ -54,34 +123,5 @@ const AccountDetails = ({ account }: { account: IAccount }) => {
     )
 }
 
-const AccountSelectionClient = ({ account, accounts }: { account: IAccount, accounts: IAccount[] }) => {
-
-    const router = useRouter();
-    const accountChange = (event: string) => {
-        //router.push(`/banking?accountId=${event}`)
-        return (event === '_' ? router.push('/banking') : router.push(`/banking?accountId=${event}`));
-    }
-
-    return (
-    <header className="flex flex-wrap mx-auto items-center">
-        <Select onValueChange={accountChange} defaultValue={account ? account.accountNumber : ''}>
-          <SelectTrigger className="w-64 h-8">
-            <SelectValue placeholder="Select Account" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="_"> -- All Account -- </SelectItem>
-              {accounts.map((account) => (
-                <SelectItem key={account._id} value={account.accountNumber}>
-                  {account.accountNumber}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        { account && <AccountDetails account={account}/> }
-    </header>
-    )
-}
 
 export default AccountSelectionClient;

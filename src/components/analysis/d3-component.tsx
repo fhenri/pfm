@@ -67,7 +67,7 @@ const D3Component = () => {
             });
     }, []);
 
-    return <div id="chart"></div>;
+    return <div className='m-5 border border-1' id="chart"></div>;
 };
 
 export default D3Component;
