@@ -73,8 +73,10 @@ const AnalyticsChart = ({ txList, categories } : { txList: ITransaction[], categ
   return (
     <>
       <Card className="basis-full">
-        <CardHeader>
-          <CardTitle>Analytics For This Year</CardTitle>
+        <CardHeader className="inline-flex flex-row space-x-2 space-y-0">
+          <CardTitle className="content-center">
+            Spend (€) by Category
+          </CardTitle>
           <CardDescription>
             <Select onValueChange={setSelectCategory} defaultValue="maison">
               <SelectTrigger className="w-96 h-8">

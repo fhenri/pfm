@@ -7,8 +7,6 @@ import { Label, Pie, PieChart } from "recharts"
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -20,50 +18,47 @@ import {
 } from "@/components/ui/chart"
 import { ITransaction } from "@/types/bTransaction"
 
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 190, fill: "var(--color-other)" },
-]
-
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  amount: {
+    label: "Amount (€)",
   },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
+  income: {
+    label: "Income (€): ",
+    color: "#84cc16",
   },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
+  outcome: {
+    label: "Outcome (€): ",
+    color: "#dc2626",
   },
 } satisfies ChartConfig
 
+
 const ChartPie = ({ txList } : { txList: ITransaction[] }) => {
 
-  const totalVisitors = React.useMemo(() => {
+  const totalSpend = React.useMemo(() => {
     return txList.reduce((acc, tx) => acc + tx.AmountEUR, 0)
   }, [txList])
 
+  const data = txList.reduce((acc, transaction) => {
+    if (transaction.AmountEUR > 0) {
+      acc.income += transaction.AmountEUR;
+    } else if (transaction.AmountEUR < 0) {
+      acc.outcome += -transaction.AmountEUR;
+    }
+    return acc;
+  }, { income: 0, outcome: 0 });
+  
+  const formattedResult = [
+    { type: 'income', amount: data.income, fill: "var(--color-income)" },
+    { type: 'outcome', amount: data.outcome, fill: "var(--color-outcome)" }
+  ];
+  
+  console.log(formattedResult);
+  
   return (
     <Card className="flex flex-col border-2 rounded basis-1/3">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Spend by Account</CardTitle>
+        <CardTitle>Account PNL</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -74,9 +69,9 @@ const ChartPie = ({ txList } : { txList: ITransaction[] }) => {
               cursor={false}
               content={<ChartTooltipContent hideLabel />} />
             <Pie
-              data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
+              data={formattedResult}
+              dataKey="amount"
+              nameKey="type"
               innerRadius={60}
               strokeWidth={5}>
               <Label
@@ -91,14 +86,14 @@ const ChartPie = ({ txList } : { txList: ITransaction[] }) => {
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold">
-                          {totalVisitors.toLocaleString()}
+                          className="fill-foreground text-xl font-bold">
+                          {totalSpend.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground">
-                          Visitors
+                          (EUR)
                         </tspan>
                       </text>
                     )
