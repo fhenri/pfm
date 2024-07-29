@@ -19,9 +19,8 @@ const AnalysisPage = async () => {
 
     return (
         <>
-        <Toolbar 
-                account={account}
-                accounts={accountListJson} />
+        <Toolbar selectedAccounts={accountListJson}
+                 availableAccounts={accountListJson} />
         <div className="inline-flex">
             <D3Component />
             <BarChart />

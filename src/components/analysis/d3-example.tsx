@@ -63,7 +63,7 @@ function BarChart() {
 
 
   return (
-      <div ref={svgRef} className='m-5 border border-1'></div>
+      <div ref={svgRef} className='m-5 p-5 border border-1'></div>
   );
 }
 
