@@ -2,6 +2,9 @@
 
 import { PlusCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
+import {
+  DialogClose,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import {
   TabsContent
@@ -71,7 +74,17 @@ const ProfileDetailsElement = ({profile}:{profile: IProfile}) => {
               <Button variant="ghost" className="pl-0" type="submit"><PlusCircledIcon /></Button>
             </div>
             </form>
-          <Button className="mt-4" variant="secondary" onClick={deleteProfileClient}>Delete Profile</Button>
+          <div className="flex flex-row justify-between">
+            <Button className="mt-4" onClick={deleteProfileClient}>
+              Delete Profile
+            </Button>
+            <DialogClose asChild>
+              <Button className="mt-4" variant="secondary">
+                Done
+              </Button>
+            </DialogClose>
+
+          </div>
         </TabsContent>
     )
 }

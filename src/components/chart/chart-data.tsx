@@ -14,6 +14,7 @@ import {
   ChartContainer,
   ChartTooltip, 
   ChartTooltipContent } from "@/components/ui/chart"
+import ITransaction from "@/types/bTransaction"
 
 const chartConfig = {
   income: {
@@ -28,7 +29,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-const ChartSample = ({ txList } : { txList: ITransaction[] }) => {
+const ChartSample = ({ txList } : { txList: typeof ITransaction[] }) => {
 
   const data = txList.reduce((acc, transaction) => {
     const transactionDate = new Date(transaction.TransactionDate);
@@ -54,6 +55,7 @@ const ChartSample = ({ txList } : { txList: ITransaction[] }) => {
     return acc;
   }, []);
   
+  console.log(data);
   return (
     <Card className="border-2 rounded basis-1/2 grow">
       <CardHeader>
@@ -62,8 +64,8 @@ const ChartSample = ({ txList } : { txList: ITransaction[] }) => {
       <CardContent>
         <ChartContainer 
             config={chartConfig} 
-            className="min-h-[350px] w-full">
-          <BarChart accessibilityLayer data={data}>
+            className="max-h-[300px] w-full">
+          <BarChart accessibilityLayer data={data.reverse()}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"

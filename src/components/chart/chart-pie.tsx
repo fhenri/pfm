@@ -60,7 +60,7 @@ const ChartPie = ({ txList } : { txList: ITransaction[] }) => {
       <CardContent className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[350px] w-[350px]">
+          className="mx-auto aspect-square max-h-[300px] w-[350px]">
           <PieChart>
             <ChartTooltip
               cursor={false}

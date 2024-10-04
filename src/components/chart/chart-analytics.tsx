@@ -105,10 +105,12 @@ const AnalyticsChart = ({ txList, categories } : { txList: ITransaction[], categ
         <CardContent>
           <div style={{ width: '100%', height: 300 }}>
             <ResponsiveContainer>
-              <LineChart width={1100} height={300} data={data}>
+              <LineChart accessibilityLayer 
+                         width={1100} height={300} data={data}>
                 <Line type='monotone' 
                       dataKey={selectCategory} 
-                      stroke='#8884d8' />
+                      strokeWidth={2}
+                      stroke="hsl(var(--chart-1))" />
                 <CartesianGrid stroke='#ccc' vertical={false} />
                 <XAxis dataKey='month' />
                 <YAxis />

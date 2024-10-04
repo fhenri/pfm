@@ -16,15 +16,20 @@ export async function getMyUser() {
 }
 
 export async function setUserProfile(user: IUser, profile: string) {
-    await kv.set(user.name, profile);
+    try {
+        await kv.set(user.name, profile);
+    } catch (e) {
+        return null;
+    }
 }
 
-export async function getCurrentUserProfile(user) {
+export async function getCurrentUserProfile(user: IUser) {
     try {
         const userProfile = await kv.get(user.name);
         return userProfile;
     } catch (e) {
-        return null;
+        // if we're not connected we can revert to perso profile
+        return "perso";
     }
 }
 

@@ -54,7 +54,7 @@ const DataTableCategory = ({ txId, txCategories }:
         <form action={formCategoryAction} id="category">
             <input type="hidden" name="id" value={txId} />
             <input type="text" name="txNewCategory" id="txNewCategory" list="categories"
-                    className="mb-2 w-full h-5 px-1 rounded-none border border-gray-300 text-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="w-full h-5 px-1 rounded-none border border-gray-300 text-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     onBlur={categoryFocusOut}
                     onKeyDown={categoryKeyDown}/>
             <div>
@@ -64,7 +64,7 @@ const DataTableCategory = ({ txId, txCategories }:
                     variant="outline"
                     key={category}
                     onClick={removeCategory}
-                    className="rounded-sm mx-1 px-1 font-normal cursor-default">
+                    className="rounded-sm mt-1 mr-1 px-1 font-normal cursor-default">
                     {category}
                   </Badge>
 

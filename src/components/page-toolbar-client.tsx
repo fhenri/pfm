@@ -40,6 +40,9 @@ const Toolbar = ({ selectedAccounts, availableAccounts }:
                 selectedAccounts={selectedAccounts}
                 availableAccounts={availableAccounts} />
         <DateRangePicker
+              disabled={(date) =>
+                  date > new Date() || date < new Date("1900-01-01")
+              }
               triggerSize="sm"
               triggerClassName="ml-auto w-64 min-h-10"
               align="end"

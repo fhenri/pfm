@@ -62,6 +62,7 @@ const TransactionTableClient = (
   const { toast } = useToast()
 
   const table = useReactTable({
+    autoResetPageIndex: false,
     data: transactions,
     columns: DataTableColumns,
     columnResizeMode: 'onChange',
@@ -124,7 +125,7 @@ const TransactionTableClient = (
               <CategoryContext.Provider key={row.id} value={{ categoryList, setCategoryList }}>
                 <TableRow key={row.id}>
                   { row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="p-2 pt-1 align-top">
+                    <TableCell key={cell.id} className="px-2 py-1 align-top">
                       { flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

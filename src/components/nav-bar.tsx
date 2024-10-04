@@ -6,8 +6,6 @@ import { getUserAvailableProfile, getCurrentUserProfile } from "@/services/user-
 import { Button } from "@/components/ui/button"
 import LoggedInUserMenu from '@/components/nav/logged-in-user-menu';
 
-import mongoose from "mongoose";
-
 interface UserAuth0 {
     name: string;
     nickname: string;

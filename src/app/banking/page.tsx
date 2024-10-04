@@ -7,7 +7,6 @@ import * as accountService from '@/services/account-service';
 import * as userService from '@/services/user-service';
 import * as categoryService from '@/services/category-service';
 import TransactionTableClient from '@/components/datatable/transaction-table-client';
-import AccountSelectionClient from '@/components/account-selection-client';
 
 const BankingPage = async () => {
 

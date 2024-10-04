@@ -52,7 +52,9 @@ const ProfileSettingsDialog = (
         <Tabs defaultValue="account" className="w-[500px]">
           <TabsList className="">
             { profileList && profileList.map((profile, index) => (
-            <TabsTrigger className="w-16" key={index} value={profile.name}>{profile.name}</TabsTrigger>
+              <TabsTrigger className="w-16" key={index} value={profile.name}>
+                {profile.name}
+              </TabsTrigger>
             ))}
             <TabsTrigger value="new">
                 <PlusCircledIcon className="w-4"/><span className="ml-2">Add</span>
