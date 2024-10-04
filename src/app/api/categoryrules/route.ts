@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from 'fs';
 
-import { connectToMongoDB } from '@/lib/mongo';
+import dbConnect from '@/lib/mongo';
 
 import Papa from 'papaparse';
 import CategoryRule from '@/types/txRules';
@@ -16,7 +16,7 @@ type CsvRowType = {
 
 export async function GET (req: NextRequest, res: NextResponse) {
     try {
-        connectToMongoDB();
+        await dbConnect();
 
         const file = await fs.readFile(process.cwd() + '/src/config/rules.csv', 'utf8');
         Papa.parse(file, {
