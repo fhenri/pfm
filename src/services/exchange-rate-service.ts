@@ -1,3 +1,4 @@
+import moment from 'moment-timezone';
 import mongoose from "mongoose";
 import CurrencyAPI from '@everapi/currencyapi-js';
 import ExchangeRate from '@/types/currencyExchangeRate';
@@ -13,6 +14,7 @@ export async function getAmountEUR (
         }
         const dbRate = await getDBRate(fromCurrency, baseCurrency, transactionDate);
         if (dbRate == 1) {
+            console.log(`cannot find rate in db - fetching data from API for ${fromCurrency} to ${baseCurrency} - ${transactionDate}`);
             const currencyApi = new CurrencyAPI(process.env.CURRENCY_API_KEY);
             const apiData = await currencyApi.historical({
                 date: transactionDate.toISOString().split('T')[0],
@@ -30,7 +32,7 @@ export async function getAmountEUR (
             return amount * dbRate;
         }
     } catch (e) {
-        console.error(e);
+        console.error('Error getting amount in EUR:', e);
         return amount;
     }
 }
@@ -41,7 +43,7 @@ export async function getDBRate(
     txDate: Date): Promise<number> {
 
     const endOfDay = new Date(txDate);
-    endOfDay.setDate(txDate.getDate() + 1);
+    endOfDay.setDate(endOfDay.getDate() + 1);
 
     const dbRate = await ExchangeRate.findOne({
         FromCurrency: fromCurrency,
@@ -65,12 +67,26 @@ export async function saveDBRate(
     date: Date,
     rate: number) {
 
-    const dbRate = await ExchangeRate.create({
-        _id: new mongoose.Types.ObjectId(),
-        FromCurrency: fromCurrency,
-        ToCurrency: toCurrency,
-        RateDate: date,
-        Rate: rate
-    });
-    dbRate.save();
+    const dbRate = await getDBRate(
+        fromCurrency, 
+        toCurrency, 
+        date);
+
+    if (dbRate == 1) {
+        // create rate if not present in db
+        // Parse the date string and convert it to UTC
+        const rateDate = moment.tz(date.toISOString(), 'MM/DD/YYYY', 'UTC').toDate();
+
+        const newRate = await ExchangeRate.create({
+            _id: new mongoose.Types.ObjectId(),
+            FromCurrency: fromCurrency,
+            ToCurrency: toCurrency,
+            RateDate: rateDate,
+            Rate: rate
+        });
+        newRate.save();
+    } else {
+        console.warn(`Rate for ${fromCurrency} to ${toCurrency} on ${date} already existing in DB`);
+    }
+
 }

@@ -4,6 +4,16 @@ import Category from '@/types/txCategory';
 import { getCategoryForTransaction } from '@/services/category-service';
 import { getAmountEUR } from '@/services/exchange-rate-service';
 
+interface QueryFilter {
+    AccountNumber: { $in: string[]; };
+    TransactionDate?: { $gte?: Date; $lte?: Date; };
+}
+
+interface TransactionFilter {
+    $gte?: Date;
+    $lte?: Date;
+}
+
 const getTransactionList = async(currentAccountList: string[]) : Promise<ITransaction[]> => {
     try {
         const txList = await bTransaction
@@ -20,13 +30,15 @@ const getTransactionList = async(currentAccountList: string[]) : Promise<ITransa
     }
 }
 
-const findTransactionAccountsList = async (accountList, dateFrom, dateTo) :
-Promise<ITransaction[]> => {
-    let queryFilter = {
-      AccountNumber: { $in: accountList },
+const findTransactionAccountsList = async (
+    accountList: string[], 
+    dateFrom: string, 
+    dateTo: string) : Promise<ITransaction[]> => {
+    let queryFilter: QueryFilter = {
+        AccountNumber: { $in: accountList },
     };
-
-    let transactionDateFilter = {};
+        
+    let transactionDateFilter: TransactionFilter = {};
     if (dateFrom) {
         transactionDateFilter['$gte'] = new Date(dateFrom)
         queryFilter['TransactionDate'] = transactionDateFilter;
@@ -51,9 +63,12 @@ Promise<ITransaction[]> => {
 
 const findTransactionAccountList = async (accountId, dateFrom, dateTo) :
 Promise<ITransaction[]> => {
-    let transactionDateFilter = {};
-    let queryFilter = {'AccountNumber': accountId};
-    if (dateFrom) {
+    let queryFilter: QueryFilter = {
+        AccountNumber: accountId
+      };
+
+      let transactionDateFilter: TransactionFilter = {};
+      if (dateFrom) {
         transactionDateFilter['$gte'] = new Date(dateFrom)
         queryFilter['TransactionDate'] = transactionDateFilter;
     }
@@ -91,6 +106,7 @@ const createTransaction = async(
         const dbTransaction = await bTransaction.create({
             _id: transactionId,
             AccountNumber: AccountNumber,
+            Currency: accountCurrency,
             TransactionDate: TransactionDate,
             ValueDate: ValueDate,
             Description: Description,
