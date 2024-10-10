@@ -37,8 +37,10 @@ async function importHistoricalRates(
       */
     });
 
+    console.log(parsedResults.data.length)
     if (parsedResults.data && parsedResults.data.length > 0) {
         for (const row of parsedResults.data as CsvRowType[]) {
+            console.log(row.Date, row.Price);
             await saveDBRate(fromCurrency, toCurrency, row.Date, 1 / row.Price);
         }
     }
@@ -47,23 +49,20 @@ async function importHistoricalRates(
 }
 
 async function main() {
-    //await connectToMongoDB();
-    const db = await mongoose.connect(process.env.MONGODB_URI!);
-    await importHistoricalRates('MUR', 'EUR', process.cwd() + '/script/EUR_MUR_Historical_Data.csv');
-    console.log("complete loading ...")
-    //await closeMongoDBConnection();
-    //await db.disconnect();
-    //mongoose.connection.close()
+    try {
+        const db = await mongoose.connect(process.env.MONGODB_URI!);
 
+        const historicalFileName = process.argv[2] || "script/EUR_MUR_Historical_Data.2023-1.csv";
+
+        const result = await importHistoricalRates(
+            'MUR', 'EUR', 
+            process.cwd() + '/' + historicalFileName);
+        console.log("complete loading ...");
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await mongoose.connection.close();
+    }
 }
 
 main().catch(console.error);
-/*
-async function main () {
-    await connectToMongoDB()
-    await importHistoricalRates('MUR','EUR', process.cwd() + '/script/EUR_MUR_Historical_Data.csv')
-    await closeMongoDBConnection()
-}
-
-main();
-*/
