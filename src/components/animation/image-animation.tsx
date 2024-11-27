@@ -10,35 +10,6 @@ const ImageAnimation = () => {
   const [translateY, setTranslateY] = useState("0px");
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      console.log("IntersectionObserver", entries)
-        entries.forEach((entry) => {
-          if (entry.target === ref.current) {
-            const intersectionRatio = entry.intersectionRatio;
-            console.log(intersectionRatio)
-
-            // If not intersecting at all, reset to initial angle
-            if (intersectionRatio === 0) {
-              setAngle("-30deg");
-              return;
-            }
-            
-            // Calculate smooth transition from -30 to 0 degrees
-            // Map intersection ratio from 0.33 to 1 into a range of -30 to 0
-            if (intersectionRatio >= 0.33 && intersectionRatio <= 1) {
-              // Linear interpolation from -30 to 0
-              const normalizedRatio = (intersectionRatio - 0.33) / (1 - 0.33);
-              const newAngle = -30 + (normalizedRatio * 30);
-              console.log(`${newAngle.toFixed(1)}deg`)
-              setAngle(`${newAngle.toFixed(1)}deg`);
-            }
-          }
-        });
-      },
-      {
-        threshold: [0, 0.33, 0.5, 1],
-      }
-    );
 
     const imageElement = ref.current;
     const containerElement = containerRef.current;
@@ -68,8 +39,6 @@ const ImageAnimation = () => {
       // Calculate the percentage of the image visible
       const visiblePercentage = visibleHeight / rect.height;
 
-      // Specifically handle scrolling from bottom to top
-      // Only rotate when scrolling from bottom, not when disappearing at the top
       if (visiblePercentage >= 0.33 && visiblePercentage <= 1 && rect.top > 0) {
         // Linear interpolation from -30 to 0 degrees
         const normalizedRatio = (visiblePercentage - 0.33) / (1 - 0.33);
@@ -88,14 +57,7 @@ const ImageAnimation = () => {
     // Initial call to set correct angle on load
     //handleScroll();
 
-    /*
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-    */
-
     return () => {
-        //observer.disconnect();
         window.removeEventListener('scroll', handleScroll);
     };
   }, []);
@@ -110,7 +72,7 @@ const ImageAnimation = () => {
         style={{ 
           transform: `perspective(800px) rotateX(${angle}) translateY(${translateY})`,
         }} 
-        src="/screenshot/main.png"
+        src="/screenshot/main.webp"
         alt="PFM Screenshot"
         width={1200}
         height={693}
