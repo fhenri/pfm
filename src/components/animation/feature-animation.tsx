@@ -168,7 +168,8 @@ const FeatureAnimation = () => {
       {features.map((feature, index) => (
         <div
           key={feature.title}
-          onClick={() => toggleFlip(index)}
+          onMouseEnter={() => toggleFlip(index)}
+          onMouseLeave={() => toggleFlip(index)}
           className={`
             group relative w-full bg-gray-100 rounded-2xl p-4 max-md:max-w-md max-md:mx-auto 
             md:w-2/5 md:h-64 xl:p-7 xl:w-1/4 perspective-1000
