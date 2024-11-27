@@ -18,6 +18,16 @@ const config = {
       },
     },
     extend: {
+      perspective: {
+        '1000': 'perspective: 100px',
+      },
+      backfaceVisibility: {
+        'hidden': 'backface-visibility: hidden',
+      },
+      rotate: {
+        'y-0': 'transform: rotateY(0deg);',
+        'y-180': 'transform: rotateY(180deg);',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
